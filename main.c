@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <opencv/highgui.h>
 
 
 
@@ -34,7 +35,7 @@ int Testing = NO;
 
 
 
-uint8_t f1[614400];
+uint8_t outVideo[2000000];
 uint8_t f2[614400];
 
 
@@ -59,8 +60,10 @@ y	2	G R G R G R G R
 		
 		
 		//DecodeYUVtoRGB(videoFrame,f,width,height);
-		DecodeYUVtoY(videoFrame,f1,width,height);
-		borderdetector2(f1,width,height,f2,5000);
+		//DecodeYUVtoY(videoFrame,f1,width,height);
+		
+    
+                borderdetector2(videoFrame,width,height,outVideo,5000);
 		//displayPictureBlack(f2,width,height);
 		
                 //displayPictureRGB(f,width,height);
@@ -158,15 +161,59 @@ int main(int argc, char** argv) {
         int width  = WIDTH;
 	int height = HEIGHT;
     
-        uint8_t * videoFrame = (uint8_t*)malloc(width*height*2);
-        
+
+       
+ 
     
-        if(Testing){
-            testFunction();
-	} 
+        if(Testing){ testFunction();} 
         else{
-            process_image_yuv422 (videoFrame, width, height);
-        }
+            
+              IplImage* img = NULL; 
+              const char* window_title = "Hello, OpenCV!";
+              img = cvLoadImage("/home/t1audrai/Documents/projetElec/ImagePros/Images/coin.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              if (img == NULL)
+              {
+                  fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
+                  return EXIT_FAILURE;
+              }
+              cvNamedWindow (window_title, CV_WINDOW_AUTOSIZE);
+             
+             
+              height = img->height;
+              width = img->width;
+              
+             uint8_t * videoFrame = (uint8_t*)malloc(width*height*2*sizeof(uint8_t));
+
+              
+  
+             
+             int i =0;
+             for (int h = 0; h < height-1; h++) {
+			for (int w = 0; w < width-1; w++){
+                                    videoFrame[i++] = CV_IMAGE_ELEM(img,uint8_t,h,w);
+                                    
+                        }
+             }
+             
+              
+             
+             
+            process_image_yuv422(videoFrame, width, height);
+             
+             
+             i = 0;
+             for (int h = 0; h < height-1; h++) {
+			for (int w = 0; w < width-1; w++){
+                                   CV_IMAGE_ELEM(img,uint8_t,h,w) =  outVideo[i++] ;
+                                    
+                        }
+             }
+              
+              cvShowImage (window_title, img);
+              cvWaitKey(0);
+              cvDestroyAllWindows();
+              cvReleaseImage(&img);
+            }
            
 
     

@@ -56,7 +56,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-Wl,-rpath,/usr/local/include/opencv `pkg-config --libs opencv`  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -69,27 +69,27 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/imagepros: ${OBJECTFILES}
 ${OBJECTDIR}/CVtool.o: CVtool.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CVtool.o CVtool.c
+	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CVtool.o CVtool.c
 
 ${OBJECTDIR}/decode.o: decode.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/decode.o decode.c
+	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/decode.o decode.c
 
 ${OBJECTDIR}/display.o: display.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/display.o display.c
+	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/display.o display.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/myPrint.o: myPrint.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/myPrint.o myPrint.c
+	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/myPrint.o myPrint.c
 
 # Subprojects
 .build-subprojects:

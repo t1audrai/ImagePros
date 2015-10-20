@@ -22,9 +22,12 @@ void borderdetector2(uint8_t* input, int width, int height, uint8_t* output, int
 		int sub[9];
 	
 	
+		//for(i=1;i<height-1;++i){
+		//	for(j=1;j< width-1;++j){
+                            
+                        
 		for(i=1;i<height-1;++i){
-			for(j=1;j< width-1;++j){
-				
+			for(j=1;j< width-1;++j){		
 					
 					
 						

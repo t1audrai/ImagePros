@@ -47,8 +47,17 @@
           <standard>3</standard>
           <incDir>
             <pElem>headers</pElem>
+            <pElem>/usr/local/include/opencv</pElem>
           </incDir>
         </cTool>
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>/usr/local/include/opencv</pElem>
+          </linkerDynSerch>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="CVtool.c" ex="false" tool="0" flavor2="0">
       </item>
