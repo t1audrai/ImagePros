@@ -35,7 +35,7 @@ uint8_t *framebuffer;
 
 
 void rect_fill(int x,int y, int w, int h, unsigned short color);
-void displayPictureBlack(uint8_t * inFrame,int width, int height);
+void displayPictureBlack(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
 void displayPictureRGB(uint8_t * inFrame,int width, int height);
 
 #endif

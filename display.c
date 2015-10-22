@@ -31,14 +31,14 @@ void displayPictureRGB(uint8_t * inFrame,int width, int height)
 }
 
 
-void displayPictureBlack(uint8_t * inFrame,int width, int height)
+void displayPictureBlack(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset)
 {	
 	int i = width*height-1;
 	for (int h = height-1; h >= 0; h--) {
 					for (int w = width-1; w >= 0; w--) {
 										
 						int B = inFrame[i];
-						SET_PIXEL(w,h,RGB(B,B,B));
+						SET_PIXEL(w+X_offset,h+Y_offset,RGB(B,B,B));
 						i--;
 				}
 	}

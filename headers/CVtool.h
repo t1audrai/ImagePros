@@ -2,12 +2,11 @@
 #define CVTOOL_H 
 
 
-struct matrix*  createPrewitt(const char* dir);
+void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int threshold );
+void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R );
+int imageMean(uint8_t* input, int width, int height);
 
+void thresholding(uint8_t* input, int width, int height, uint8_t* output, int backgroundPercent );
 
-struct matrix* borderdetector( struct matrix*  input_m, struct matrix*  output_m, int threshold );
-
-
-void borderdetector2(uint8_t* input, int width, int height, uint8_t* output, int threshold );
 #endif
 
