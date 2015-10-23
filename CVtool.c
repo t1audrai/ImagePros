@@ -45,7 +45,7 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
                 for (int h = height-2; h >= 1; h--) {
 					for (int w = width-2; w >= 1; w--) {	
                                                        
-							histo[input[k--] >> 6] ++; // division par 16
+							histo[input[k--] >> 5] ++; // division par 16
                                                         
                                                         
 			}
@@ -67,12 +67,11 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
                 if( (highestPos-4) < 0){
                     
                     //black background
-                    log_i("black background","threshold :%d\n",threshold);
-                    threshold = highestPos << 6 +32;
+                    threshold = (highestPos << 5) +32;                  
                     k=size-1;
                     for (int h = height-2; h >= 1; h--) {
 			for (int w = width-2; w >= 1; w--) {			
-                            output[k] = (input[k] < threshold )? OBJECT:BACKGROUND;
+                            output[k] = (input[k] < threshold )? BACKGROUND:OBJECT;
                             k--;			
                         }
                     }
@@ -81,7 +80,7 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
                 else{
                     
                      //white background
-                    threshold = highestPos << 6; 
+                    threshold = highestPos << 5; 
                     log_i("white background","threshold :%d\n",threshold);
                     k=size-1;
                     for (int h = height-2; h >= 1; h--) {

@@ -61,13 +61,13 @@ y	2	G R G R G R G R
 		
 		//DecodeYUVtoRGB(videoFrame,f,width,height);
 		//DecodeYUVtoY(videoFrame,f1,width,height);
-		
     
-                 //borderDetector(videoFrame,width,height,outVideo,28);
+    
+                //borderDetector(videoFrame,width,height,outVideo,28);
                  
                 shapeDetector(videoFrame,width,height,outVideo,5);
                  
-                 
+                
        
 		
 		//displayPictureBlack(f2,width,height);
@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
             
               IplImage* img = NULL; 
               const char* window_title = "Hello, OpenCV!";
-              img = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shapeN.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              img = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_GRAYSCALE);
               if (img == NULL)
               {
                   fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
