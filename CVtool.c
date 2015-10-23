@@ -10,8 +10,7 @@
 int BACKGROUND = 0;
 int OBJECT = 255;
 
-uint8_t tmp[614400];
-uint8_t tmp2[614400];
+
 
 
 
@@ -44,7 +43,6 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
                 unsigned int histo[8] = {0,0,0,0,0,0,0,0};               
                 for (int h = height-2; h >= 1; h--) {
 					for (int w = width-2; w >= 1; w--) {	
-                                                       
 							histo[input[k--] >> 5] ++; // division par 16
                                                         
                                                         
@@ -103,12 +101,13 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
 
 void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R ) {
 		
-                thresholding(input, width, height, output, 100);
-
-		
-		/*
-		//sobel
-		borderDetector(tmp,width,height,tmp2,28);
+                uint8_t tmp[614400];
+                uint8_t tmp2[614400];
+    
+                thresholding(input, width, height, tmp, 100);
+		borderDetector(tmp,width,height,output,28);
+                
+                /*
 		
 		//dilatation
 		int dilatation[9] = {255, 255, 255, 255, 255, 255, 255, 255, 255};		
