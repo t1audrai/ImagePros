@@ -99,18 +99,50 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
 }
 
 
-void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R ) {
-		
-                uint8_t tmp[614400];
-                uint8_t tmp2[614400];
+void erosion3x3(uint8_t* input, int width, int height, uint8_t* output){
     
-                thresholding(input, width, height, tmp, 100);
-		borderDetector(tmp,width,height,output,28);
-                
-                /*
-		
-		//dilatation
-		int dilatation[9] = {255, 255, 255, 255, 255, 255, 255, 255, 255};		
+                int erosion[9] = {OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT};
+                int sub[9];
+                unsigned int i,j,pos;
+		for(i=height-2;i>=1;i--){
+				for(j=width-2;j>=1;j--){
+					
+					
+										
+						pos = (i+1)*(width-1)+(j);
+						sub[6] =  input[pos-1] && erosion[6];
+						sub[7] =  input[pos]   && erosion[7];					 
+						sub[8] =  input[pos+1] && erosion[8];				 
+											 		
+						pos -= (width-1);
+						sub[3] =  input[pos-1] && erosion[3];			 
+						sub[5] =  input[pos+1] && erosion[5];	
+						
+						pos -= (width-1);					 		
+						sub[0] =  input[pos-1] && erosion[0];
+						sub[1] =  input[pos]   && erosion[1];					 
+						sub[2] =  input[pos+1] && erosion[2];	
+						
+						pos += (width-1);
+					
+					if( sub[1] && sub[2] && sub[3] && sub[5] && sub[6] && sub[7] && sub[8]){
+					
+								output[pos] = OBJECT;  
+					}
+					else{
+								output[pos] = BACKGROUND; 
+					}
+					
+	
+			}
+		}
+    
+}
+
+void dilation3x3(uint8_t* input, int width, int height, uint8_t* output){
+
+                int dilatation[9] = {OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT, OBJECT};	
+                unsigned int i,j,pos;
 		int sub[9];
 		for(i=height-2;i>=1;i--){
 				for(j=width-2;j>=1;j--){
@@ -118,71 +150,51 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R
 					
 										
 						pos = (i+1)*(width-1)+(j);
-						sub[6] =  tmp2[pos-1] && dilatation[6];
-						sub[7] =  tmp2[pos]   && dilatation[7];					 
-						sub[8] =  tmp2[pos+1] && dilatation[8];				 
+						sub[6] =  input[pos-1] && dilatation[6];
+						sub[7] =  input[pos]   && dilatation[7];					 
+						sub[8] =  input[pos+1] && dilatation[8];				 
 											 		
 						pos -= (width-1);
-						sub[3] =  tmp2[pos-1] && dilatation[3];			 
-						sub[5] =  tmp2[pos+1] && dilatation[5];	
+						sub[3] =  input[pos-1] && dilatation[3];			 
+						sub[5] =  input[pos+1] && dilatation[5];	
 						
 						pos -= (width-1);					 		
-						sub[0] =  tmp2[pos-1] && dilatation[0];
-						sub[1] =  tmp2[pos]   && dilatation[1];					 
-						sub[2] =  tmp2[pos+1] && dilatation[2];	
+						sub[0] =  input[pos-1] && dilatation[0];
+						sub[1] =  input[pos]   && dilatation[1];					 
+						sub[2] =  input[pos+1] && dilatation[2];	
 						
 						pos += (width-1);
 					
 					if( sub[1] || sub[2] || sub[3] || sub[5] || sub[6] || sub[7] ||sub[8]){
 					
-								tmp[pos] = 255;
+								output[pos] = OBJECT;
 								
 					}
 					else{
-								tmp[pos] = 0; 
+								output[pos] = BACKGROUND; 
 					}
 					
 	
 			}
 		}
-		
-		
-		
-		//erosion
-		int erosion[9] = {255, 255, 255, 255, 255, 255, 255, 255, 255};		
+    
+}
 
-		for(i=height-2;i>=1;i--){
-				for(j=width-2;j>=1;j--){
-					
-					
-										
-						pos = (i+1)*(width-1)+(j);
-						sub[6] =  tmp[pos-1] && erosion[6];
-						sub[7] =  tmp[pos]   && erosion[7];					 
-						sub[8] =  tmp[pos+1] && erosion[8];				 
-											 		
-						pos -= (width-1);
-						sub[3] =  tmp[pos-1] && erosion[3];			 
-						sub[5] =  tmp[pos+1] && erosion[5];	
-						
-						pos -= (width-1);					 		
-						sub[0] =  tmp[pos-1] && erosion[0];
-						sub[1] =  tmp[pos]   && erosion[1];					 
-						sub[2] =  tmp[pos+1] && erosion[2];	
-						
-						pos += (width-1);
-					
-					if( sub[1] && sub[2] && sub[3] && sub[5] && sub[6] && sub[7] && sub[8]){
-					
-								tmp2[pos] = 255;  
-					}
-					else{
-								tmp2[pos] = 0; 
-					}
-					
-	
-			}
-		}
+
+void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R ) {
+		
+                uint8_t tmp[614400];
+                uint8_t tmp2[614400];
+    
+                thresholding(input, width,height, tmp, 100);
+		borderDetector(tmp,width,height,tmp2,28);
+                dilation3x3(tmp2,width,height,tmp);
+                erosion3x3(tmp,width,height,output);
+                
+                
+                /*
+		
+		
 		
 		
 		//segmentation
