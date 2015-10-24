@@ -196,7 +196,7 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
                         if(input[pos+1] == BACKGROUND){ //pixel suivant = backgroun
                                 if(input[pos+(width-2)] == BACKGROUND){
                                         nbElement ++;
-                                        output[pos] = (nbElement*50);
+                                        output[pos] = (nbElement);
                                 }
                                 else{
                                     output[pos] = output[pos+(width-2)];

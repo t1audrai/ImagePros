@@ -39,7 +39,7 @@ uint8_t outVideo[3000000];
 uint8_t f2[614400];
 
 
-
+int color[5] = {0x000000 ,0xFF0012, 0x00FF40, 0x0010FF, 0x7800FF};
 
 
 static void process_image_yuv422(uint8_t * videoFrame, int width, int height)
@@ -174,10 +174,14 @@ int main(int argc, char** argv) {
         if(Testing){ testFunction();} 
         else{
             
-              IplImage* img = NULL; 
+              IplImage* imgGray = NULL; 
+              IplImage* imgRGB = NULL; 
+              
+              
               const char* window_title = "Hello, OpenCV!";
-              img = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-              if (img == NULL)
+              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_COLOR);
+              if (imgGray == NULL)
               {
                   fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
                   return EXIT_FAILURE;
@@ -185,8 +189,8 @@ int main(int argc, char** argv) {
               cvNamedWindow (window_title, CV_WINDOW_AUTOSIZE);
              
              
-              height = img->height;
-              width = img->width;
+              height = imgGray->height;
+              width = imgGray->width;
               
              uint8_t * videoFrame = (uint8_t*)malloc(width*height*2*sizeof(uint8_t));
 
@@ -196,7 +200,7 @@ int main(int argc, char** argv) {
              int i =0;
              for (int h = 0; h < height-1; h++) {
 			for (int w = 0; w < width-1; w++){
-                                    videoFrame[i++] = CV_IMAGE_ELEM(img,uint8_t,h,w);
+                                    videoFrame[i++] = CV_IMAGE_ELEM(imgGray,uint8_t,h,w);
                                     
                         }
              }
@@ -208,17 +212,24 @@ int main(int argc, char** argv) {
              
              
              i = 0;
-             for (int h = 0; h < height-1; h++) {
-			for (int w = 0; w < width-1; w++){
-                                   CV_IMAGE_ELEM(img,uint8_t,h,w) =  outVideo[i++] ;
-                                    
+             uint8_t R=0,B=0,G=0;
+          
+            for (int h = 0; h < height-1; h++) {
+			for (int w = 0; w <( width-1)*3; w+=3){
+                            
+                                   B = (color[outVideo[i]] & 0xFF0000) >> 16;
+                                   G = (color[outVideo[i]] & 0x00FF00) << 8 >> 16;
+                                   R = (color[outVideo[i++]] & 0x0000FF) << 16>> 16;  
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w)   = R ; //R
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+1) = G; //G
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+2) = B;//B
                         }
              }
               
-              cvShowImage (window_title, img);
+              cvShowImage (window_title, imgRGB);
               cvWaitKey(0);
               cvDestroyAllWindows();
-              cvReleaseImage(&img);
+              cvReleaseImage(&imgRGB);
             }
            
 
