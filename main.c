@@ -35,7 +35,7 @@ int Testing = NO;
 
 
 
-uint8_t outVideo[2000000];
+uint8_t outVideo[3000000];
 uint8_t f2[614400];
 
 
