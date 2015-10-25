@@ -39,7 +39,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/decode.o \
 	${OBJECTDIR}/display.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/myPrint.o
+	${OBJECTDIR}/myPrint.o \
+	${OBJECTDIR}/pcDisplay.o
 
 
 # C Compiler Flags
@@ -90,6 +91,11 @@ ${OBJECTDIR}/myPrint.o: myPrint.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/myPrint.o myPrint.c
+
+${OBJECTDIR}/pcDisplay.o: pcDisplay.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pcDisplay.o pcDisplay.c
 
 # Subprojects
 .build-subprojects:

@@ -34,7 +34,7 @@ int imageMean(uint8_t* input, int width, int height){
 
 
 
-void thresholding(uint8_t* input, int width, int height, uint8_t* output, int coefDispersion ){
+void thresholding(uint8_t* input, int width, int height, uint8_t* output, int offset){
                 
                 unsigned int size = width*height;
 		unsigned int k=size-1;		
@@ -71,7 +71,7 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
                     k=size-1;
                     for (int h = height-1; h >= 0; h--) {
 			for (int w = width-1; w >= 0; w--) {			
-                            output[k] = (input[k] < threshold )? BACKGROUND:OBJECT;
+                            output[k] = (input[k] < threshold + offset )? BACKGROUND:OBJECT;
                             k--;			
                         }
                     }
@@ -85,7 +85,7 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int co
                     k=size-1;
                     for (int h = height-1; h >= 0; h--) {
 			for (int w = width-1; w >= 0; w--) {			
-                            output[k] = (input[k] > threshold )? BACKGROUND:OBJECT;
+                            output[k] = (input[k] > threshold- offset )? BACKGROUND:OBJECT;
                             k--;			
                         }
                     }
@@ -188,29 +188,29 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
     unsigned int nbElement = 0;
     unsigned int i,j,k,pos;
                                 
-    for(i=height-2;i>=1;i--){
-        for(j=width-2;j>=1;j--){
-		pos = (i)*(width-2)+(j);
+    for(i=height-3;i>=1;i--){
+        for(j=width-3;j>=1;j--){
+		pos = (i)*(width-3)+(j);
 		if(input[pos] == OBJECT){
                     
                         if(input[pos+1] == BACKGROUND){ //pixel suivant = backgroun
-                                if(input[pos+(width-2)] == BACKGROUND){
+                                if(input[pos+(width-3)] == BACKGROUND){
                                         nbElement ++;
                                         output[pos] = (nbElement);
                                 }
                                 else{
-                                    output[pos] = output[pos+(width-2)];
+                                    output[pos] = output[pos+(width-3)];
                                     
                                 }			
                         }
                         else{
                                 output[pos] = output[pos+1];
                                 //on verifie que celui dans dessous a la meme couleur
-                                if(output[pos+(width-2)] != BACKGROUND && output[pos] != output[pos+(width-2)]){
+                                if(output[pos+(width-3)] != BACKGROUND && output[pos] != output[pos+(width-3)]){
                                     k = pos;
                                     nbElement --;
                                     while( output[k] != BACKGROUND){
-                                        output[k] = output[pos+(width-2)];
+                                        output[k] = output[pos+(width-3)];
                                         k++;
                                     }
                                 }
@@ -232,11 +232,13 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R
                 uint8_t tmp[614400];
                 uint8_t tmp2[614400];
     
-                thresholding(input, width,height, tmp, 100);
-		//borderDetector(tmp,width,height,tmp2,28);
-                dilation3x3(tmp,width,height,tmp2);
-                erosion3x3(tmp2,width,height,output);
-                unsigned int element = segmentation(tmp,width,height,output);
+                thresholding(input, width,height, tmp, 50);
+		borderDetector(tmp,width,height,tmp2,28);
+                dilation3x3(tmp2,width,height,tmp);
+                
+                erosion3x3(tmp,width,height,tmp2);
+               
+                unsigned int element = segmentation(tmp2,width,height,output);
                 log_e("shapeDetector","nb element = %d",element);
                 
            

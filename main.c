@@ -8,6 +8,7 @@
 
 #include "myPrint.h"
 #include "display.h"
+#include "pcDisplay.h"
 #include "decode.h"
 #include "CVtool.h"
 #include <stdint.h>
@@ -38,8 +39,8 @@ int Testing = NO;
 uint8_t outVideo[3000000];
 uint8_t f2[614400];
 
+#define IMG "coin.jpg";
 
-int color[5] = {0x000000 ,0xFF0012, 0x00FF40, 0x0010FF, 0x7800FF};
 
 
 static void process_image_yuv422(uint8_t * videoFrame, int width, int height)
@@ -63,10 +64,11 @@ y	2	G R G R G R G R
 		//DecodeYUVtoY(videoFrame,f1,width,height);
     
     
-                //borderDetector(videoFrame,width,height,outVideo,28);
-                 
+               //borderDetector(videoFrame,width,height,outVideo,28);
+               //pcDisplayPictureBlack(outVideo,width,height,0,0); 
+                
                 shapeDetector(videoFrame,width,height,outVideo,5);
-                 
+                pcDisplayPictureFC(outVideo,width,height,0,0);
                 
        
 		
@@ -97,7 +99,7 @@ void testFunction(){
 		A[1] =2;
 		A[2] =0;
 		A[3] =4;
-		A[4] =3;
+		A[4] =3;int X_offset, int Y_offset
 		A[5] =1;
 		struct matrix* MA = init_matrix(2,3,A);
 		print_matrix(MA);
@@ -128,6 +130,7 @@ void testFunction(){
 		int * A = (int*) malloc (2*3* sizeof(int));
 		A[0] =1;
 		A[1] =2;
+                //
 		A[2] =0;
 		A[3] =4;
 		A[4] =3;
@@ -179,8 +182,13 @@ int main(int argc, char** argv) {
               
               
               const char* window_title = "Hello, OpenCV!";
+              
+              
+              
               imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_GRAYSCALE);
               imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_COLOR);
+              
+              
               if (imgGray == NULL)
               {
                   fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
@@ -207,22 +215,20 @@ int main(int argc, char** argv) {
              
               
              
-             
+            
             process_image_yuv422(videoFrame, width, height);
              
              
-             i = 0;
-             uint8_t R=0,B=0,G=0;
+            i = 0;
+            int j=0;
+      
           
             for (int h = 0; h < height-1; h++) {
 			for (int w = 0; w <( width-1)*3; w+=3){
                             
-                                   B = (color[outVideo[i]] & 0xFF0000) >> 16;
-                                   G = (color[outVideo[i]] & 0x00FF00) << 8 >> 16;
-                                   R = (color[outVideo[i++]] & 0x0000FF) << 16>> 16;  
-                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w)   = R ; //R
-                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+1) = G; //G
-                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+2) = B;//B
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w)   = outScreen[j++] ;//R
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+1) = outScreen[j++]; //G
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+2) = outScreen[j++];//B
                         }
              }
               
