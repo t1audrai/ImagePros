@@ -4,7 +4,6 @@
 #include <stdarg.h>
 
 
-
 void log_i(const char *msg, const char *input, ...){
 		va_list args;
 		if (msg[0] != '\0'){

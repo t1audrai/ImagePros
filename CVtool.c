@@ -64,7 +64,7 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int of
                  
                 
                 for(int i=7; i>=0; i--){
-                    log_i("","histo[%d] :%d",i,histo[i]);
+                   // log_i("","histo[%d] :%d",i,histo[i]);
                     if (histo[i] > highest){
                         highest = histo[i];
                         highestPos = i;
@@ -73,10 +73,10 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int of
                 }
                 
                
-                log_i("highestPos","highestPos :%d\n",highestPos);
+                //log_i("highestPos","highestPos :%d\n",highestPos);
        
                 if( (highestPos-4) < 0){
-                    log_i("black background","threshold :%d\n",threshold);
+                   // log_i("black background","threshold :%d\n",threshold);
                     //black background
                     threshold = (highestPos << 5) +32;                  
                     k=size-1;
@@ -92,7 +92,7 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int of
                     
                      //white background
                     threshold = highestPos << 5; 
-                    log_i("white background","threshold :%d\n",threshold);
+                    //log_i("white background","threshold :%d\n",threshold);
                     k=size-1;
                     for (int h = height-1; h >= 0; h--) {
 			for (int w = width-1; w >= 0; w--) {			

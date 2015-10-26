@@ -120,9 +120,9 @@ int main(int argc, char** argv) {
               
               const char* window_title = "Hello, OpenCV!";
               
-              log_i("computing","");
+              //log_i("computing","");
               init_compute();
-              log_i("end computing","");
+              //log_i("end computing","");
               
               
               imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
