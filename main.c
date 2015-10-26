@@ -67,7 +67,7 @@ y	2	G R G R G R G R
                //borderDetector(videoFrame,width,height,outVideo,28);
                //pcDisplayPictureBlack(outVideo,width,height,0,0); 
                 
-                shapeDetector(videoFrame,width,height,outVideo,5);
+                shapeDetector(videoFrame,width,height,outVideo);
               //pcDisplayPictureFC(outVideo,width,height,0,0);
                 
        

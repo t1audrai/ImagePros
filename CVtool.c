@@ -2,6 +2,7 @@
 #include "decode.h"
 #include "CVtool.h"
 #include "myPrint.h"
+#include "pcDisplay.h"
 
 
 #define WIDTH 640;
@@ -443,7 +444,7 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
                
                 unsigned int element = segmentation(tmp2,width,height,output);
                 log_e("shapeDetector","nb element = %d",element);
-                //isCircle(output,width,height,element,output,0);
+                isCircle(output,width,height,element,output,0);
                 
                 
            

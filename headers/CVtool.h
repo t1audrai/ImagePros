@@ -3,7 +3,7 @@
 
 
 void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int threshold );
-void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R );
+void shapeDetector(uint8_t* input, int width, int height, uint8_t* outputs);
 int imageMean(uint8_t* input, int width, int height);
 
 void thresholding(uint8_t* input, int width, int height, uint8_t* output, int backgroundPercent );
