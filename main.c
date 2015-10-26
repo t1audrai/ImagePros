@@ -11,6 +11,7 @@
 #include "pcDisplay.h"
 #include "decode.h"
 #include "CVtool.h"
+#include "init.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
@@ -119,6 +120,9 @@ int main(int argc, char** argv) {
               
               const char* window_title = "Hello, OpenCV!";
               
+              log_i("computing","");
+              init_compute();
+              log_i("end computing","");
               
               
               imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_GRAYSCALE);

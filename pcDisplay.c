@@ -1,4 +1,4 @@
-
+#include "CVtool.h"
 #include "pcDisplay.h"
 #include <string.h>
 #include <sys/ioctl.h>
@@ -61,15 +61,17 @@ void pcDisplayPictureFC(uint8_t * inFrame,int width, int height, int X_offset, i
 }
 
 
-void pcDisplayCircle(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset, int* tabCircle)
+void pcDisplayCircle(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset)
 {	
 	int i =0;
         int j = 0;
         
+       
+        
 	for (int h = 0; h < height; h++) {
 				for (int w = 0; w < width; w++) {
 							
-                                    if(tabCircle[inFrame[i]] == 1){ //est un cercle
+                                    if( shape[inFrame[i]].isCircle == 1 ){ //est un cercle
 						outScreen[j++] = R(2); //R
 						outScreen[j++] = G(2); //G
                                                 outScreen[j++] = B(2); //B
@@ -77,7 +79,7 @@ void pcDisplayCircle(uint8_t * inFrame,int width, int height, int X_offset, int 
                                     }
                                 
                                     
-                                    else if(tabCircle[inFrame[i]] == 0  && inFrame[i] !=0) {
+                                    else if(shape[inFrame[i]].isCircle == 0  && inFrame[i] !=0) {
                                                 outScreen[j++] = R(1); //R
 						outScreen[j++] = G(1); //G
                                                 outScreen[j++] = B(1); //B

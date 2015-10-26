@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/CVtool.o \
 	${OBJECTDIR}/decode.o \
 	${OBJECTDIR}/display.o \
+	${OBJECTDIR}/init.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/myPrint.o \
 	${OBJECTDIR}/pcDisplay.o
@@ -81,6 +82,11 @@ ${OBJECTDIR}/display.o: display.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/display.o display.c
+
+${OBJECTDIR}/init.o: init.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/init.o init.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
