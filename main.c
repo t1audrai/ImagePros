@@ -68,7 +68,7 @@ y	2	G R G R G R G R
                //pcDisplayPictureBlack(outVideo,width,height,0,0); 
                 
                 shapeDetector(videoFrame,width,height,outVideo,5);
-              //  pcDisplayPictureFC(outVideo,width,height,0,0);
+              //pcDisplayPictureFC(outVideo,width,height,0,0);
                 
        
 		
@@ -91,71 +91,7 @@ void testFunction(){
 		 log_d("","   |_| |___|___|_| |__|  |___|_|_|___|_| |_|___|_|_| \n");
 		 log_d("","\n");                                                     
 
-		/*
-		log_d("testFunction","test mult");
-		log_d ("testFunction","ma");
-		unsigned int * A = (unsigned int*) malloc (2*3* sizeof(unsigned int));
-		A[0] =1;
-		A[1] =2;
-		A[2] =0;
-		A[3] =4;
-		A[4] =3;int X_offset, int Y_offset
-		A[5] =1;
-		struct matrix* MA = init_matrix(2,3,A);
-		print_matrix(MA);
-
-
-		log_d ("testFunction","mb\n");
-		unsigned int * B = (unsigned int*) malloc (3*2* sizeof(unsigned int));
-		B[0] =5;
-		B[1] =1;
-		B[2] =2;
-		B[3] =3;
-		B[4] =3;
-		B[5] =4;
-		struct matrix* MB = init_matrix(3,2,B);
-		print_matrix(MB);
-	
-	
-		log_d ("testFunction", "ans\n");
-		struct matrix* ans = mult_matrix(MA,MB);
-		print_matrix(ans);
-		log_d ("testFunction", "\n");
-		log_d ("testFunction", "ok2\n");
 		
-		*/
-		/*
-		log_d("testFunction","sous matrice\n");
-		log_d ("testFunction","ma\n");
-		int * A = (int*) malloc (2*3* sizeof(int));
-		A[0] =1;
-		A[1] =2;
-                //
-		A[2] =0;
-		A[3] =4;
-		A[4] =3;
-		A[5] =1;
-		struct matrix* MA = init_matrix(2,3,A);
-		print_matrix(MA);
-		
-		
-		log_d ("testFunction","ans\n");
-		struct matrix* ans = sub_matrix(MA,0,1,0,1);
-		print_matrix(ans);
-	
-		unsigned int add = sum_matrix(ans);
-		log_d ("testFunction","add = %d\n", add );
-		log_i ("testFunction","add = %d\n", add );
-		log_e ("testFunction","add = %d\n", add );
-		log_wtf ("testFunction","add = %d\n", add );
-		*/
-		/*
-		log_d("testFunction","Prewitt\n");
-		struct matrix* ans = createPrewitt("H");
-		print_matrix(ans);
-		
-		delete_matrix(ans);
-		log_d("testFunction","del\n");*/
 		
 		
 		
@@ -185,8 +121,8 @@ int main(int argc, char** argv) {
               
               
               
-              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shapeN.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shapeN.jpg", CV_LOAD_IMAGE_COLOR);
+              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_COLOR);
               
               
               if (imgGray == NULL)

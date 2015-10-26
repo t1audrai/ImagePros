@@ -186,6 +186,7 @@ int segMinY[200];
 int segMaxX[200];
 int segMaxY[200];
 
+
 unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output){
     
     unsigned int nbElement = 0;
@@ -255,29 +256,7 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
                    
                         
         }
-    }
-    
-    
-    /*
-  
-    
-
-         
-    output[(segMinY[1])*(width-1)+(segMinX[1])] = 7;
-    output[(segMaxY[1])*(width-1)+(segMaxX[1])] = 7;
-    
-    output[(segMinY[2])*(width-1)+(segMinX[2])] = 7;
-    output[(segMaxY[2])*(width-1)+(segMaxX[2])] = 7;
-    
-    output[(segMinY[3])*(width-1)+(segMinX[3])] = 7;
-    output[(segMaxY[3])*(width-1)+(segMaxX[3])] = 7;
-
-     
-    log_wtf("element 1","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[1],segMaxX[1],segMinY[1],segMaxY[1]);
-    log_wtf("element 2","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[2],segMaxX[2],segMinY[2],segMaxY[2]);
-    log_wtf("element 3","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[3],segMaxX[3],segMinY[3],segMaxY[3]);
-    log_wtf("element 4","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[4],segMaxX[4],segMinY[4],segMaxY[4]);*/
-    
+    }   
     return nbElement;
 }
 
@@ -370,24 +349,7 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, uint8_t* outp
 
 
 
-void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R ) {
-		
-                uint8_t tmp[614400];
-                uint8_t tmp2[614400];
-    
-                thresholding(input, width,height, tmp, 50);
-		borderDetector(tmp,width,height,tmp2,28);
-                dilation3x3(tmp2,width,height,tmp);
-                
-                erosion3x3(tmp,width,height,tmp2);
-               
-                unsigned int element = segmentation(tmp2,width,height,output);
-                log_e("shapeDetector","nb element = %d",element);
-                isCircle(output,width,height,element,output,0);
-                
-                
-           
-}
+
 
 
 void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int R ) {
@@ -465,4 +427,24 @@ void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int 
 		}
 		
 	
+}
+
+
+void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
+		
+                uint8_t tmp[614400];
+                uint8_t tmp2[614400];
+    
+                thresholding(input, width,height, tmp,20);
+		borderDetector(tmp,width,height,tmp2,28);
+                dilation3x3(tmp2,width,height,tmp);
+                
+                erosion3x3(tmp,width,height,tmp2);
+               
+                unsigned int element = segmentation(tmp2,width,height,output);
+                log_e("shapeDetector","nb element = %d",element);
+                //isCircle(output,width,height,element,output,0);
+                
+                
+           
 }
