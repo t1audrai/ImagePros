@@ -68,7 +68,7 @@ y	2	G R G R G R G R
                //pcDisplayPictureBlack(outVideo,width,height,0,0); 
                 
                 shapeDetector(videoFrame,width,height,outVideo,5);
-                pcDisplayPictureFC(outVideo,width,height,0,0);
+              //  pcDisplayPictureFC(outVideo,width,height,0,0);
                 
        
 		
@@ -185,8 +185,8 @@ int main(int argc, char** argv) {
               
               
               
-              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shape.jpg", CV_LOAD_IMAGE_COLOR);
+              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shapeN.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/shapeN.jpg", CV_LOAD_IMAGE_COLOR);
               
               
               if (imgGray == NULL)

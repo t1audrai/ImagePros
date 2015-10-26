@@ -11,10 +11,7 @@ int BACKGROUND = 0;
 int OBJECT = 255;
 
 
-
-
-
-int imageMean(uint8_t* input, int width, int height){
+ int imageMean(uint8_t* input, int width, int height){
     
      
         unsigned int size = width*height;
@@ -127,7 +124,7 @@ void erosion3x3(uint8_t* input, int width, int height, uint8_t* output){
 						
 						pos += (width-2);
 					
-					if( sub[1] && sub[2] && sub[3] && sub[5] && sub[6] && sub[7] && sub[8]){
+					if( sub[0] && sub[1] && sub[2] && sub[3] && sub[5] && sub[6] && sub[7] && sub[8]){
 					
 								output[pos] = OBJECT;  
 					}
@@ -167,7 +164,7 @@ void dilation3x3(uint8_t* input, int width, int height, uint8_t* output){
 						
 						pos += (width-2);
 					
-					if( sub[1] || sub[2] || sub[3] || sub[5] || sub[6] || sub[7] ||sub[8]){
+					if(sub[0] || sub[1] || sub[2] || sub[3] || sub[5] || sub[6] || sub[7] ||sub[8]){
 					
 								output[pos] = OBJECT;
 								
@@ -183,37 +180,57 @@ void dilation3x3(uint8_t* input, int width, int height, uint8_t* output){
 }
 
 
+
+int segMinX[200];
+int segMinY[200];
+int segMaxX[200];
+int segMaxY[200];
+
 unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output){
     
     unsigned int nbElement = 0;
-    unsigned int i,j,k,pos;
+    unsigned int ptJ,k,pos;
                                 
-    for(i=height-3;i>=1;i--){
-        for(j=width-3;j>=1;j--){
+    for(int i=height-3;i>=1;i--){
+        for(int j=width-3;j>=1;j--){
 		pos = (i)*(width-3)+(j);
 		if(input[pos] == OBJECT){
                     
                         if(input[pos+1] == BACKGROUND){ //pixel suivant = backgroun
                                 if(input[pos+(width-3)] == BACKGROUND){
                                         nbElement ++;
-                                        output[pos] = (nbElement);
+                                        output[pos] = nbElement;
+                                        segMaxY[nbElement] = i;
+                                        segMinY[nbElement] = i;
+                                                                           
                                 }
                                 else{
                                     output[pos] = output[pos+(width-3)];
+                                    segMinY[output[pos]] = i;
                                     
                                 }			
                         }
                         else{
-                                output[pos] = output[pos+1];
+                                output[pos] = output[pos+1];   
+                                
                                 //on verifie que celui dans dessous a la meme couleur
                                 if(output[pos+(width-3)] != BACKGROUND && output[pos] != output[pos+(width-3)]){
                                     k = pos;
+                                    ptJ = 0;
                                     nbElement --;
                                     while( output[k] != BACKGROUND){
                                         output[k] = output[pos+(width-3)];
                                         k++;
+                                        ptJ ++;
                                     }
+                                    segMinY[output[pos]] = i;
+                                    
+                                   
                                 }
+                            
+                                
+                                
+                                
                         } 
 		}
 		else{
@@ -222,7 +239,133 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
 	}
 
     }
+
+
+    for(int i=height-1;i>=0;i--){
+        for(int j=width-1;j>=0;j--){
+            
+                    int pos = (i)*(width-1)+(j);
+                    if(output[pos] != BACKGROUND){
+                            
+                        
+                        segMaxX[output[pos]] = (segMaxX[output[pos]] < j)? j:segMaxX[output[pos]];
+                        segMinX[output[pos]] = (segMinX[output[pos]] > j || segMinX[output[pos]] == 0)? j:segMinX[output[pos]];
+                                
+                    }
+                   
+                        
+        }
+    }
+    
+    
+    /*
+  
+    
+
+         
+    output[(segMinY[1])*(width-1)+(segMinX[1])] = 7;
+    output[(segMaxY[1])*(width-1)+(segMaxX[1])] = 7;
+    
+    output[(segMinY[2])*(width-1)+(segMinX[2])] = 7;
+    output[(segMaxY[2])*(width-1)+(segMaxX[2])] = 7;
+    
+    output[(segMinY[3])*(width-1)+(segMinX[3])] = 7;
+    output[(segMaxY[3])*(width-1)+(segMaxX[3])] = 7;
+
+     
+    log_wtf("element 1","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[1],segMaxX[1],segMinY[1],segMaxY[1]);
+    log_wtf("element 2","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[2],segMaxX[2],segMinY[2],segMaxY[2]);
+    log_wtf("element 3","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[3],segMaxX[3],segMinY[3],segMaxY[3]);
+    log_wtf("element 4","segMinX = %d , segMaxX = %d , segMinY = %d , segMaxY = %d",segMinX[4],segMaxX[4],segMinY[4],segMaxY[4]);*/
+    
     return nbElement;
+}
+
+int TabCircle[200];
+
+int isCircle(uint8_t* input, int width, int height, int nbElement, uint8_t* output, int PARAM){
+    
+    int nbCircle=0;
+    
+    int midX,midY,radius1,radius2,newX1,newY1,newX2,newY2;
+    int pos, sub[9];
+    
+    for(int i = nbElement; i >=1; i--){
+        
+        midY = (segMaxY[i] + segMinY[i]) >> 1;
+        midX = (segMaxX[i] + segMinX[i]) >> 1;
+        output[(midY)*(width-1)+(midX)] = 7;
+        
+        
+        radius1 = (segMaxX[i] - segMinX[i]) >> 1;
+        radius2 = (segMaxY[i] - segMinY[i]) >> 1;
+      
+        newX1 = midX + radius1 * 0.707106;
+        newY1 = midY + radius1 * 0.707106;
+        
+        
+        newX2 = midX + radius2 * 0.707106;
+        newY2 = midY + radius2 * 0.707106;
+        
+        
+        pos = (newY1+1)*(width-1)+(newX1);
+        
+	sub[6] =  input[pos-1];
+	sub[7] =  input[pos];					 
+        sub[8] =  input[pos+1];				 
+											 		
+	pos -= (width-1);
+        
+	sub[3] =  input[pos-1];
+        sub[4] =  input[pos+1];
+	sub[5] =  input[pos+1];	
+						
+	pos -= (width-1);
+         
+	sub[0] =  input[pos-1];
+        sub[1] =  input[pos];					 
+	sub[2] =  input[pos+1];
+        
+        if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
+            nbCircle ++;
+            TabCircle[i] = 1;
+        }
+        else{
+            
+                    pos = (newY2+1)*(width-1)+(newX2);
+
+                    sub[6] =  input[pos-1];
+                    sub[7] =  input[pos];					 
+                    sub[8] =  input[pos+1];				 
+
+                    pos -= (width-1);
+
+                    sub[3] =  input[pos-1];
+                    sub[4] =  input[pos+1];
+                    sub[5] =  input[pos+1];	
+
+                    pos -= (width-1);
+
+                    sub[0] =  input[pos-1];
+                    sub[1] =  input[pos];					 
+                    sub[2] =  input[pos+1];
+                    if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
+                        nbCircle ++;
+                        TabCircle[i] = 1;
+                    }
+            
+        }
+        
+        
+        
+       
+    }
+    log_e("nbcircle = ","%d",nbCircle);
+    pcDisplayCircle(input,width,height,0,0,TabCircle);
+    
+    
+    
+
 }
 
 
@@ -240,6 +383,8 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output, int R
                
                 unsigned int element = segmentation(tmp2,width,height,output);
                 log_e("shapeDetector","nb element = %d",element);
+                isCircle(output,width,height,element,output,0);
+                
                 
            
 }
