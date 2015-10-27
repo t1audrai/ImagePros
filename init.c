@@ -2,6 +2,7 @@
 #include "myPrint.h"
 #include <string.h>
 #include <sys/ioctl.h>
+#include <math.h> 
 
 
 void init_compute(){
@@ -9,10 +10,15 @@ void init_compute(){
     int T = 0;
     for(int R = 599; R>=0; R-- ){
         RADxPI_4[R] = R*CosPi_4;
-        for(int angle=99; angle >=0; angle--){
+        
+        float angle = _2PI/99;
+        int pas =0;
+        while(pas < 100){
                 
-                sinRADIUSxPI[R][angle] = R*(PI_1/angle);
-                cosRADIUSxPI[R][angle] = R*(PI_1/angle);
+                sinRADIUSxPI[R][pas] = (int) (R*sin(angle)+0.5);
+                cosRADIUSxPI[R][pas] = (int) (R*cos(angle)+0.5);
+                angle += angle;
+                pas++;
         }
          
        /* if(t >= 6){

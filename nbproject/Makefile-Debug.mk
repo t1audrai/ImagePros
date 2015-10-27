@@ -58,7 +58,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-Wl,-rpath,/usr/local/include/opencv `pkg-config --libs opencv`  
+LDLIBSOPTIONS=-Wl,-rpath,/usr/local/include/opencv `pkg-config --libs opencv` -lm   
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}

@@ -68,10 +68,13 @@ y	2	G R G R G R G R
                //borderDetector(videoFrame,width,height,outVideo,28);
                //pcDisplayPictureBlack(outVideo,width,height,0,0); 
                 
-                shapeDetector(videoFrame,width,height,outVideo);
+               //shapeDetector(videoFrame,width,height,outVideo);
               //pcDisplayPictureFC(outVideo,width,height,0,0);
                 
        
+    
+                hough(videoFrame,width,height,outVideo);
+                pcDisplayPictureBlack(outVideo,width,height,0,0);
 		
 		//displayPictureBlack(f2,width,height);
 		

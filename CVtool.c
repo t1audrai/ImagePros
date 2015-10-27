@@ -384,7 +384,7 @@ void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int 
 		int threshold = imageMean(input, width, height) * R;
 		
 		for(int i=height-2;i>=1;i--){
-			for(int j=width-2;j>=1;j--){	
+			for(int j=width_2;j>=1;j--){	
                                                 
 						pos = (i+1)*(width_2)+(j);
                             
@@ -452,5 +452,74 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
                 isCircle(output,width,height,element,output,0);
                 
                 
+           
+}
+
+void hough(uint8_t* input, int width, int height, uint8_t* output) {
+		
+                uint8_t tmp[614400];
+                uint8_t tmp2[614400];
+                uint8_t tmp3[614400];
+                
+                unsigned int newX,newY,pos,width_1 = width-1;
+                
+		borderDetector(input,width,height,tmp2,55);
+                dilation3x3(tmp2,width,height,tmp);
+                erosion3x3(tmp,width,height,tmp2);
+               
+                
+                /* for(int teta = 99; teta >=0; teta -= 1){
+                                            newX = 320+ cosRADIUSxPI[30][teta];
+                                            newY = 240+ sinRADIUSxPI[30][teta];
+                                            
+                                                output[(newY)*(width_1)+(newX)]=255;
+                                        
+                                                
+                                    }*/
+                
+                for(int R = 65; R >= 45; R-=5){ //petit cerlce 42//gros cerlce 65
+                        for(int i=height-1;i>=0;i--){
+                                for(int j=width-1;j>=0;j--){	
+
+
+                                    pos = (i)*(width_1)+(j);
+                                    if(tmp2[pos] == OBJECT){
+                                     
+                                            for(int teta = 99; teta >=0; teta -= 5){
+                                                    newX = j+ cosRADIUSxPI[R][teta];
+                                                    newY = i+ sinRADIUSxPI[R][teta];
+                                                    if ( newX > 2 && newX < width-3 && newY >2 && newY <height-3){
+                                                        tmp3[(newY)*(width_1)+(newX)] +=5;
+                                                    }
+                                            } 
+
+                                    }
+
+                                }
+                        }
+                        
+                        
+                         //recherche maxima
+                        for(int i=height-1;i>=0;i--){
+                                for(int j=width-1;j>=0;j--){
+                                                pos = (i)*(width_1)+(j);
+                                                if(tmp3[pos] > 50){  //gros cerlce 50
+
+                                                    for(int teta2 = 99; teta2 >=0; teta2 -= 1){
+                                                            newX = j+ cosRADIUSxPI[R][teta2];
+                                                            newY = i+ sinRADIUSxPI[R][teta2];
+                                                                        if ( newX > 2 && newX < width-3 && newY >2 && newY <height-3){
+                                                                                    output[(newY)*(width_1)+(newX)]= 255;
+                                                                        }
+
+                                                    }
+
+                                                }
+                                                tmp3[pos]=0;
+                                }
+                        }
+
+                        
+                }
            
 }

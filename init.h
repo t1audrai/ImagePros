@@ -8,6 +8,8 @@
 #ifndef INIT_H
 #define	INIT_H
 
+
+#define _2PI        6.283185
 #define PI_1        3.141592
 #define PI_2        1.570779
 #define PI_4        0.785398
