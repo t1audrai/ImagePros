@@ -466,16 +466,6 @@ void hough(uint8_t* input, int width, int height, uint8_t* output) {
 		borderDetector(input,width,height,tmp2,55);
                 dilation3x3(tmp2,width,height,tmp);
                 erosion3x3(tmp,width,height,tmp2);
-               
-                
-                /* for(int teta = 99; teta >=0; teta -= 1){
-                                            newX = 320+ cosRADIUSxPI[30][teta];
-                                            newY = 240+ sinRADIUSxPI[30][teta];
-                                            
-                                                output[(newY)*(width_1)+(newX)]=255;
-                                        
-                                                
-                                    }*/
                 
                 for(int R = 65; R >= 45; R-=5){ //petit cerlce 42//gros cerlce 65
                         for(int i=height-1;i>=0;i--){
