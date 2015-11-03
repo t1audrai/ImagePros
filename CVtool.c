@@ -237,8 +237,14 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
                                         k++;
                                         ptJ ++;
                                     }
-                                    shape[nbElement+1].value = 0;
-                                    shape[output[pos]].min.y = i;
+                                    if ( nbElement*sizeof(shape[0]) +1  > sizeof(shape)){
+                                        break;
+                                    }
+                                    else{
+                                        shape[nbElement+1].value = 0;
+                                        shape[output[pos]].min.y = i;
+                                    }
+                                   
                                    
                                 }
                             

@@ -7,9 +7,9 @@
       <itemPath>headers/CVtool.h</itemPath>
       <itemPath>headers/decode.h</itemPath>
       <itemPath>headers/display.h</itemPath>
-      <itemPath>init.h</itemPath>
+      <itemPath>headers/init.h</itemPath>
       <itemPath>headers/myPrint.h</itemPath>
-      <itemPath>pcDisplay.h</itemPath>
+      <itemPath>headers/pcDisplay.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -76,19 +76,19 @@
       </item>
       <item path="headers/display.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="headers/init.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="headers/myPrint.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="init.c" ex="false" tool="0" flavor2="0">
+      <item path="headers/pcDisplay.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="init.h" ex="false" tool="3" flavor2="0">
+      <item path="init.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="myPrint.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pcDisplay.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="pcDisplay.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -123,19 +123,19 @@
       </item>
       <item path="headers/display.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="headers/init.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="headers/myPrint.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="init.c" ex="false" tool="0" flavor2="0">
+      <item path="headers/pcDisplay.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="init.h" ex="false" tool="3" flavor2="0">
+      <item path="init.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="myPrint.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pcDisplay.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="pcDisplay.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

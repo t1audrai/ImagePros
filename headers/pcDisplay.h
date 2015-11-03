@@ -24,9 +24,9 @@ uint8_t outScreen[3000000];
 
 
 
-#define B(pos)  (color[pos] & 0xFF0000) >> 16;
-#define G(pos)  (color[pos] & 0x00FF00) << 8 >> 16;
-#define R(pos)  (color[pos] & 0x0000FF) << 16>> 16;  
+#define B(pos)  ((color[pos] & 0xFF0000) >> 16)
+#define G(pos)  ((color[pos] & 0x00FF00) << 8 >> 16)
+#define R(pos)  ((color[pos] & 0x0000FF) << 16>> 16) 
 
 
 void pcDisplayPictureRGB(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
