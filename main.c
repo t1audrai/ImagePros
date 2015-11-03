@@ -40,7 +40,7 @@ int Testing = NO;
 uint8_t outVideo[3000000];
 uint8_t f2[614400];
 
-#define IMG "coin.jpg";
+
 
 
 
@@ -68,13 +68,14 @@ y	2	G R G R G R G R
                //borderDetector(videoFrame,width,height,outVideo,28);
                //pcDisplayPictureBlack(outVideo,width,height,0,0); 
                 
-               shapeDetector(videoFrame,width,height,outVideo);
-               pcDisplayCircle(outVideo,width,height,0,0);
+              shapeDetector(videoFrame,width,height,outVideo);
+              // pcDisplayPictureFC(outVideo,width,height,0,0);
+              pcDisplayCircle(outVideo,width,height,0,0);
                 
        
     
-               // hough(videoFrame,width,height,outVideo);
-               // pcDisplayPictureBlack(outVideo,width,height,0,0);
+               //hough(videoFrame,width,height,outVideo);
+               //pcDisplayPictureBlack(outVideo,width,height,0,0);
 		
 		//displayPictureBlack(f2,width,height);
 		
@@ -128,8 +129,8 @@ int main(int argc, char** argv) {
               //log_i("end computing","");
               
               
-              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_COLOR);
+              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/coin.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/coin.jpg", CV_LOAD_IMAGE_COLOR);
               
               
               if (imgGray == NULL)

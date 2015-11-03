@@ -273,20 +273,20 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
                    
                         
         }
-    }   
+    }
+    
+    
+    nbElement = clearShape(output,width,height,nbElement,5);
     return nbElement;
+    //return nbElement;
 }
 
 
-int isCircle(uint8_t* input, int width, int height, int nbElement, uint8_t* output, int PARAM){
+int clearShape(uint8_t* input, int width, int height, int nbElement,int radiusOfShape){
     
-    int nbCircle=0;
-    unsigned int width_1 = width-1;
-    int newX1,newY1,newX2,newY2;
-    int pos, sub[9];
-    
+    int realElement = nbElement;
     for(int i = nbElement; i >=1; i--){
-           
+        
         shape[i].center.y = (shape[i].max.y + shape[i].min.y) >> 1;
         shape[i].center.x = (shape[i].max.x + shape[i].min.x) >> 1;
         //output[(midY)*(width-1)+(midX)] = 7;
@@ -294,69 +294,129 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, uint8_t* outp
         
         shape[i].radiusX = (shape[i].max.x - shape[i].min.x) >> 1;
         shape[i].radiusY = (shape[i].max.y - shape[i].min.y) >> 1;
-      
-        newX1 = shape[i].center.x + RADxPI_4[shape[i].radiusX];
-        newY1 = shape[i].center.y + RADxPI_4[shape[i].radiusX];
         
-        
-        newX2 = shape[i].center.x + RADxPI_4[shape[i].radiusY];// radius2 * 0.707106;
-        newY2 = shape[i].center.y + RADxPI_4[shape[i].radiusY];//radius2 * 0.707106;
-        
-        
-        pos = (newY1+1)*(width_1)+(newX1);
-        
-	sub[6] =  input[pos-1];
-	sub[7] =  input[pos];					 
-        sub[8] =  input[pos+1];				 
-											 		
-	pos -= (width_1);
-        
-	sub[3] =  input[pos-1];
-        sub[4] =  input[pos];
-	sub[5] =  input[pos+1];	
-						
-	pos -= (width_1);
+        if( shape[i].radiusX < radiusOfShape || shape[i].radiusY < radiusOfShape ){
+            realElement --;
+            shape[i].tooSmall = 1;
          
-	sub[0] =  input[pos-1];
-        sub[1] =  input[pos];					 
-	sub[2] =  input[pos+1];
-        
-        if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
-            nbCircle ++;
-            shape[i].isCircle =1;
         }
         else{
-            
-                    pos = (newY2+1)*(width_1)+(newX2);
-
-                    sub[6] =  input[pos-1];
-                    sub[7] =  input[pos];					 
-                    sub[8] =  input[pos+1];				 
-
-                    pos -= (width_1);
-
-                    sub[3] =  input[pos-1];
-                    sub[4] =  input[pos+1];
-                    sub[5] =  input[pos+1];	
-
-                    pos -= (width_1);
-
-                    sub[0] =  input[pos-1];
-                    sub[1] =  input[pos];					 
-                    sub[2] =  input[pos+1];
-                    if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
-                        nbCircle ++;
-                        shape[i].isCircle =1;
-                    }
-            
+            shape[i].tooSmall = 0;
+            log_wtf("","raduisX = %d , raduisY = %d ",shape[i].radiusX,shape[i].radiusY);
         }
         
+    }
+    
+    return realElement;
+}
+
+int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
+    
+    int nbCircle=0;
+    unsigned int width_1 = width-1;
+    int newX1,newY1,newX2,newY2;
+    int pos, sub[9];
+    int _isCircle;
+    
+    for(int i = 200; i >=1; i--){
+         
+        
+        /*shape[i].center.y = (shape[i].max.y + shape[i].min.y) >> 1;
+        shape[i].center.x = (shape[i].max.x + shape[i].min.x) >> 1;
+        //output[(midY)*(width-1)+(midX)] = 7;
+        
+        
+        shape[i].radiusX = (shape[i].max.x - shape[i].min.x) >> 1;
+        shape[i].radiusY = (shape[i].max.y - shape[i].min.y) >> 1;*/
+      
+        //newX1 = shape[i].center.x + RADxPI_4[shape[i].radiusX];
+        //newY1 = shape[i].center.y + RADxPI_4[shape[i].radiusX];
+        if(shape[i].tooSmall == 1){
+            
+        }
+        else{
+
+                _isCircle = 0; 
+                newX1 = shape[i].center.x + cosRADIUSxPI[shape[i].radiusX][12];
+                newY1 = shape[i].center.y + sinRADIUSxPI[shape[i].radiusX][12];
+
+
+                //newX2 = shape[i].center.x + RADxPI_4[shape[i].radiusY];// radius2 * 0.707106;
+                //newY2 = shape[i].center.y + RADxPI_4[shape[i].radiusY];//radius2 * 0.707106;
+
+                newX2 = shape[i].center.x + cosRADIUSxPI[shape[i].radiusY][80];
+                newY2 = shape[i].center.y + sinRADIUSxPI[shape[i].radiusY][80];
+
+                
+                    
+                
+
+                        pos = (newY1+1)*(width_1)+(newX1);
+
+                        sub[6] =  input[pos-1];
+                        sub[7] =  input[pos];					 
+                        sub[8] =  input[pos+1];				 
+
+                        pos -= (width_1);
+
+                        sub[3] =  input[pos-1];
+                        sub[4] =  input[pos];
+                        sub[5] =  input[pos+1];	
+
+                        pos -= (width_1);
+
+                        sub[0] =  input[pos-1];
+                        sub[1] =  input[pos];					 
+                        sub[2] =  input[pos+1];
+
+                        if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
+                            //nbCircle ++;
+                            //shape[i].isCircle =1;
+                            _isCircle = 1;
+                        }
+
+                        //else{
+
+                                    pos = (newY2+1)*(width_1)+(newX2);
+
+                                    sub[6] =  input[pos-1];
+                                    sub[7] =  input[pos];					 
+                                    sub[8] =  input[pos+1];				 
+
+                                    pos -= (width_1);
+
+                                    sub[3] =  input[pos-1];
+                                    sub[4] =  input[pos+1];
+                                    sub[5] =  input[pos+1];	
+
+                                    pos -= (width_1);
+
+                                    sub[0] =  input[pos-1];
+                                    sub[1] =  input[pos];					 
+                                    sub[2] =  input[pos+1];
+                                    if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
+                                        //nbCircle ++;
+                                        //shape[i].isCircle =1;
+                                        _isCircle = 1;
+                                    }
+                                    else{
+                                        _isCircle = 0;
+                                    }
+
+                        //}
+                                    if(_isCircle ==1){
+                                        shape[i].isCircle = 1;
+                                        nbCircle ++;
+                 
+                                    }
+                               
+        }
         
         
        
     }
     log_e("nbcircle = ","%d",nbCircle);
-    pcDisplayCircle(input,width,height,0,0);
+    
     
     
     
@@ -448,14 +508,14 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
                 uint8_t tmp2[614400];
     
                 thresholding(input, width,height, tmp,20);
-		borderDetector(tmp,width,height,tmp2,28);
-                dilation3x3(tmp2,width,height,tmp);
+		//borderDetector(tmp,width,height,tmp2,28);
+                dilation3x3(tmp,width,height,tmp2);
+                erosion3x3(tmp2,width,height,tmp);
                 
-                erosion3x3(tmp,width,height,tmp2);
                
-                unsigned int element = segmentation(tmp2,width,height,output);
+                unsigned int element = segmentation(tmp,width,height,output);
                 log_e("shapeDetector","nb element = %d",element);
-                isCircle(output,width,height,element,output,0);
+                isCircle(output,width,height,element,0);
                 
                 
            

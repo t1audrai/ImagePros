@@ -9,7 +9,7 @@ void init_compute(){
     int t = 1;
     int T = 0;
     for(int R = 599; R>=0; R-- ){
-        RADxPI_4[R] = R*CosPi_4;
+     
         
         float angle = _2PI/99;
         int pas =0;

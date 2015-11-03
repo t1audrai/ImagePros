@@ -67,19 +67,19 @@ void displayPictureFC(uint8_t * inFrame,int width, int height, int X_offset, int
 void displayCircle(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset)
 {	
 	int i =0;
-        int j = 0;
-        
-       
-        
+        int j = 0;       
 	for (int h = 0; h < height; h++) {
 				for (int w = 0; w < width; w++) {
-							
-                                    if( shape[inFrame[i]].isCircle == 1 ){ //est un cercle
-					SET_PIXEL(w+X_offset,h+Y_offset,RGB(R(2),G(2),B(2)));
-				    }
-                                    else if(shape[inFrame[i]].isCircle == 0  && inFrame[i] !=0) {
-                                        SET_PIXEL(w+X_offset,h+Y_offset,RGB(R(1),G(1),B(1)));
+				
+                                    if(shape[inFrame[i]].tooSmall == 0){
+                                            if( shape[inFrame[i]].isCircle == 1){ //est un cercle
+                                                  SET_PIXEL(w+X_offset,h+Y_offset,RGB(R(2),G(2),B(2)));
+                                            }
+                                            else{
+                                                  SET_PIXEL(w+X_offset,h+Y_offset,RGB(R(1),G(1),B(1)));
+                                            }
                                     }
+                                 
                                     else{
                                         SET_PIXEL(w+X_offset,h+Y_offset,RGB(R(0),G(0),B(0)));
                                         

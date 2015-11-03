@@ -47,14 +47,27 @@ void pcDisplayPictureFC(uint8_t * inFrame,int width, int height, int X_offset, i
 {	
 	int i =0;
         int j = 0;
-        
+      
 	for (int h = 0; h < height; h++) {
 				for (int w = 0; w < width; w++) {
-										
-						outScreen[j++] = R(inFrame[i]); //R
-						outScreen[j++] = G(inFrame[i]); //G
-                                                outScreen[j++] = B(inFrame[i]); //B
-						i++;
+								
+                                    
+                                    
+                                            if(shape[inFrame[i]].tooSmall == 0 ){ //est un cercle
+                                                    outScreen[j++] = R(inFrame[i]); //R
+                                                    outScreen[j++] = G(inFrame[i]); //G
+                                                    outScreen[j++] = B(inFrame[i]); //B
+                                                    i++;
+
+                                           }
+                                            else{
+                                                    outScreen[j++] = R(0); //R
+                                                    outScreen[j++] = G(0); //G
+                                                    outScreen[j++] = B(0); //B
+                                                    i++;
+                                                
+                                            }
+   	
 				}
 	}
 
@@ -71,19 +84,24 @@ void pcDisplayCircle(uint8_t * inFrame,int width, int height, int X_offset, int 
 	for (int h = 0; h < height; h++) {
 				for (int w = 0; w < width; w++) {
 							
-                                    if( shape[inFrame[i]].isCircle == 1 ){ //est un cercle
-						outScreen[j++] = R(2); //R
-						outScreen[j++] = G(2); //G
-                                                outScreen[j++] = B(2); //B
-						
-                                    }
-                                
                                     
-                                    else if(shape[inFrame[i]].isCircle == 0  && inFrame[i] !=0) {
-                                                outScreen[j++] = R(1); //R
-						outScreen[j++] = G(1); //G
-                                                outScreen[j++] = B(1); //B
-                                    }
+                                    
+                                   // if(shape[inFrame[i]].tooSmall == 0){
+                                    
+                                                    if( shape[inFrame[i]].isCircle == 1 && shape[inFrame[i]].tooSmall == 0){ //est un cercle
+                                                                outScreen[j++] = R(2); //R
+                                                                outScreen[j++] = G(2); //G
+                                                                outScreen[j++] = B(2); //B
+
+                                                    }
+
+
+                                                    else if(shape[inFrame[i]].isCircle == 0  && inFrame[i] !=0 && shape[inFrame[i]].tooSmall == 0) {
+                                                                outScreen[j++] = R(1); //R
+                                                                outScreen[j++] = G(1); //G
+                                                                outScreen[j++] = B(1); //B
+                                                    }                
+                                  // }
                                     else{
                                                 outScreen[j++] = R(0); //R
 						outScreen[j++] = G(0); //G

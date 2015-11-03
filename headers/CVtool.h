@@ -28,6 +28,7 @@ typedef struct {
     int radiusY;
     int value;
     int isCircle;
+    int tooSmall;
 }Shape;
 
 
@@ -42,6 +43,10 @@ void dilation3x3(uint8_t* input, int width, int height, uint8_t* output);
 void erosion3x3(uint8_t* input, int width, int height, uint8_t* output);
 unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output);
 void hough(uint8_t* input, int width, int height, uint8_t* output) ;
+int clearShape(uint8_t* input, int width, int height, int nbElement,int radiusOfShape);
+int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM);
+
+
 
 #endif
 
