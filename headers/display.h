@@ -34,16 +34,16 @@ uint8_t *framebuffer;
 #define SET_PIXEL(x,y,color) (((short*)framebuffer)[(x)+(y)*fix_info.line_length/2]=(color))
 
 
-#define B(pos)  ((myColor[pos] & 0xFF0000) >> 16)
-#define G(pos)  ((myColor[pos] & 0x00FF00) << 8 >> 16)
-#define R(pos)  ((myColor[pos] & 0x0000FF) << 16>> 16) 
+#define Blue(pos)  ((myColor[pos] & 0xFF0000) >> 16)
+#define Green(pos)  ((myColor[pos] & 0x00FF00) << 8 >> 16)
+#define Red(pos)  ((myColor[pos] & 0x0000FF) << 16>> 16) 
 
 
 void rect_fill(int x,int y, int w, int h, unsigned short color);
-void displayPictureBlack(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
-void displayPictureRGB(uint8_t * inFrame,int width, int height);
-void displayPictureFC(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
-void displayCircle(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
+void displayPictureBlack(const uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
+void displayPictureRGB(const uint8_t * inFrame,int width, int height);
+void displayPictureFC(const uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
+void displayCircle(const uint8_t * inFrame,const uint8_t * backFrame,  int width, int height, int X_offset, int Y_offset);
 
 
 #endif

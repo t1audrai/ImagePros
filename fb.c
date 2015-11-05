@@ -17,7 +17,7 @@
 #include "display.h"
 #include "decode.h"
 #include "CVtool.h"
-
+#include "init.h"
 
 typedef void (*ProcessFunc)(uint8_t *, int, int);
 
@@ -49,8 +49,7 @@ int Testing = NO;
 #define SIZE 640*480*2;
 
 uint8_t f1[614400];
-uint8_t f2[614400];
-
+uint8_t f3[614400];
 
 
 //////////////////////////////////
@@ -112,26 +111,32 @@ y	2	G R G R G R G R
 		//DecodeYUVtoRGB(videoFrame,f,width,height);
 		DecodeYUVtoY(videoFrame,f1,width,height);
 		
-
-		borderdetector2(f1,width,height,f2,5000);
-		
-		
-		displayPictureBlack(f2,width,height);
+		//borderdetector2(f1,width,height,f2,5000);
 		//displayPictureRGB(f,width,height);
 		
+		//shapeDetector(f1,width,height,f3);
+		hough(f1,width,height,f3);
+		
+		
+		
+		
+	
+		displayCircle(f3,f1,width,height,0,0);
+		
+		
+       //displayPictureBlack(f2,width,height,0,height);
+       //displayPictureFC(f2,width,height,0,0); 
+       //displayCircle(f1,width,height,0,height);
+		
 					
+               //hough(videoFrame,width,height,f1);
+               //displayPictureBlack(f1,width,height,0,0);*/
 
 }
 
 
 static void process_image_raw12(uint8_t * videoFrame, int width, int height)
 {
-	int    x,y;
-	unsigned char R,G1,G2,B;
-	unsigned int a, b, c;
-	unsigned short *f=(unsigned short*)videoFrame;
-
-
 }
 
 /***************************************************************************
@@ -275,7 +280,7 @@ int main(int argc, char *argv[])
 	
 	int					quit=0;
 
-	
+	init_compute();
 	if(Testing){
 			testFunction();
 	} 
@@ -365,9 +370,6 @@ int main(int argc, char *argv[])
     fprintf(stderr, "framebuffer mmap address=%p\n", framebuffer);
     fprintf(stderr, "framebuffer size=%d bytes\n", size);
 
-/*    rect_fill(50,20,100,50,RGB(0xEE,0x55,0x76));
-*/
-    
     uint8_t * videoFrame = (uint8_t*) malloc (width*height*2);
 	if (!videoFrame) {
 		fprintf(stderr, "could not allocate buffer for video frame (%d bytes required)\n", width*height*2);
@@ -375,7 +377,7 @@ int main(int argc, char *argv[])
 	}
 	
 	
-	
+
     while (!quit && !Testing)
     {
 		
@@ -385,7 +387,9 @@ int main(int argc, char *argv[])
 			int ret = read(STDIN_FILENO, ptr , size);
 			ptr+=ret;
 			size-=ret;
+			
 		}
+		
 		
 		proc_func(videoFrame, width, height);
 		

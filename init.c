@@ -7,7 +7,7 @@
 
 void init_compute(){
     int t = 1;
-    int T = 0;
+    //int T = 0;
     for(int R = 599; R>=0; R-- ){
      
         
@@ -21,7 +21,7 @@ void init_compute(){
                 pas++;
         }
          
-       /* if(t >= 6){
+        /*if(t >= 6){
             t = 1;
             T++;
             loadBar(T,599,1, 30);
@@ -31,6 +31,7 @@ void init_compute(){
         loadBar(t++,599,1,50);
        
     }
+    
    
     
     

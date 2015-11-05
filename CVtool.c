@@ -3,6 +3,7 @@
 #include "CVtool.h"
 #include "myPrint.h"
 #include "pcDisplay.h"
+#include "display.h"
 #include "init.h"
 
 ////////////////////////// TOOL BOX ////////////////////////////////
@@ -47,7 +48,7 @@ const int MatErosion3x3[9] = {255, 255, 255, 255, 255, 255, 255, 255, 255};
 
 void thresholding(uint8_t* input, int width, int height, uint8_t* output, int offset){
                 
-                unsigned int size = width*height;
+         unsigned int size = width*height;
 		unsigned int k=size-1;		
 		int threshold,highest=0,highestPos=0;
              
@@ -117,27 +118,27 @@ void erosion3x3(uint8_t* input, int width, int height, uint8_t* output){
                 
                 int sub[9];
                 unsigned int width_2 = width-2;
-                unsigned int i,j,pos;
+                unsigned int pos;
 		for(int i=height-2;i>=1;i--){
 				for(int j=width_2;j>=1;j--){
 					
 					
 										
-						pos = (i+1)*(width_2)+(j);
+						pos = (i+1)*(width)+(j);
 						sub[6] =  input[pos-1] && MatErosion3x3[6];
 						sub[7] =  input[pos]   && MatErosion3x3[7];					 
 						sub[8] =  input[pos+1] && MatErosion3x3[8];				 
 											 		
-						pos -= (width_2);
+						pos -= (width);
 						sub[3] =  input[pos-1] && MatErosion3x3[3];			 
 						sub[5] =  input[pos+1] && MatErosion3x3[5];	
 						
-						pos -= (width_2);					 		
+						pos -= (width);					 		
 						sub[0] =  input[pos-1] && MatErosion3x3[0];
 						sub[1] =  input[pos]   && MatErosion3x3[1];					 
 						sub[2] =  input[pos+1] && MatErosion3x3[2];	
 						
-						pos += (width_2);
+						pos += (width);
 					
 					if( sub[0] && sub[1] && sub[2] && sub[3] && sub[5] && sub[6] && sub[7] && sub[8]){
 					
@@ -164,21 +165,21 @@ void dilation3x3(uint8_t* input, int width, int height, uint8_t* output){
 					
 					
 										
-						pos = (i+1)*(width_2)+(j);
+						pos = (i+1)*(width)+(j);
 						sub[6] =  input[pos-1] && MatDilation3x3[6];
 						sub[7] =  input[pos]   && MatDilation3x3[7];					 
 						sub[8] =  input[pos+1] && MatDilation3x3[8];				 
 											 		
-						pos -= (width_2);
+						pos -= (width);
 						sub[3] =  input[pos-1] && MatDilation3x3[3];			 
 						sub[5] =  input[pos+1] && MatDilation3x3[5];	
 						
-						pos -= (width_2);					 		
+						pos -= (width);					 		
 						sub[0] =  input[pos-1] && MatDilation3x3[0];
 						sub[1] =  input[pos]   && MatDilation3x3[1];					 
 						sub[2] =  input[pos+1] && MatDilation3x3[2];	
 						
-						pos += (width_2);
+						pos += (width);
 					
 					if(sub[0] || sub[1] || sub[2] || sub[3] || sub[5] || sub[6] || sub[7] ||sub[8]){
 					
@@ -200,18 +201,22 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
     
     unsigned int nbElement = 0;
     unsigned int ptJ,k,pos;
-    unsigned int width_1 = width-1;
+    //unsigned int width_1 = width-1;
     unsigned int width_3 = width-3;
     
-    for(int i=height-3;i>=1;i--){
-        for(int j=width_3;j>=1;j--){
-		pos = (i)*(width_3)+(j);
+    for(int i=height-3;i>=2;i--){
+        for(int j=width_3;j>=2;j--){
+		pos = (i)*(width)+(j);
 		if(input[pos] == OBJECT){
                     
-                        if(input[pos+1] == BACKGROUND){ //pixel suivant = backgroun
-                                if(input[pos+(width-3)] == BACKGROUND){
+                        if(input[pos+1] == BACKGROUND){ //pixel suivant = background
+                                if(input[pos+(width)] == BACKGROUND){
                                         nbElement ++;
+                                        //log_wtf("nbElement","%d",nbElement);
                                         output[pos] = nbElement;
+                                        shape[nbElement].max.x = 0;
+                                        shape[nbElement].min.x = 639;
+                                        
                                         shape[nbElement].max.y = i;
                                         shape[nbElement].min.y = i;
                                         shape[nbElement].value = nbElement;
@@ -219,7 +224,7 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
                                                                            
                                 }
                                 else{
-                                    output[pos] = output[pos+(width_3)];
+                                    output[pos] = output[pos+(width)];
                                     shape[output[pos]].min.y = i;
                                     
                                 }			
@@ -228,12 +233,12 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
                                 output[pos] = output[pos+1];   
                                 
                                 //on verifie que celui dans dessous a la meme couleur
-                                if(output[pos+(width-3)] != BACKGROUND && output[pos] != output[pos+(width_3)]){
+                                if(output[pos+(width)] != BACKGROUND && output[pos] != output[pos+(width)]){
                                     k = pos;
                                     ptJ = 0;
-                                    nbElement --;
+                                    nbElement = (nbElement > 1)? nbElement-1:nbElement;
                                     while( output[k] != BACKGROUND){
-                                        output[k] = output[pos+(width_3)];
+                                        output[k] = output[pos+(width)];
                                         k++;
                                         ptJ ++;
                                     }
@@ -261,10 +266,10 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
     }
 
 
-    for(int i=height-1;i>=0;i--){
-        for(int j=width_1;j>=0;j--){
+    for(int i=height-3;i>=2;i--){
+        for(int j=width-3;j>=2;j--){
             
-                    int pos = (i)*(width_1)+(j);
+                    int pos = (i)*(width)+(j);
                     if(output[pos] != BACKGROUND){
                             
                         shape[output[pos]].max.x = (shape[output[pos]].max.x < j)? j:shape[output[pos]].max.x;
@@ -276,7 +281,7 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
     }
     
     
-    nbElement = clearShape(output,width,height,nbElement,5);
+    nbElement = clearShape(output,width,height,nbElement,10);
     return nbElement;
     //return nbElement;
 }
@@ -284,8 +289,8 @@ unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output
 
 int clearShape(uint8_t* input, int width, int height, int nbElement,int radiusOfShape){
     
-    int realElement = nbElement;
-    for(int i = nbElement; i >=1; i--){
+    int realElement = 0;
+    for(int i = 199; i >=1; i--){
         
         shape[i].center.y = (shape[i].max.y + shape[i].min.y) >> 1;
         shape[i].center.x = (shape[i].max.x + shape[i].min.x) >> 1;
@@ -296,13 +301,14 @@ int clearShape(uint8_t* input, int width, int height, int nbElement,int radiusOf
         shape[i].radiusY = (shape[i].max.y - shape[i].min.y) >> 1;
         
         if( shape[i].radiusX < radiusOfShape || shape[i].radiusY < radiusOfShape ){
-            realElement --;
+            //realElement --;
             shape[i].tooSmall = 1;
          
         }
         else{
             shape[i].tooSmall = 0;
-            log_wtf("","raduisX = %d , raduisY = %d ",shape[i].radiusX,shape[i].radiusY);
+            realElement++;
+            //log_wtf("","raduisX = %d , raduisY = %d ",shape[i].radiusX,shape[i].radiusY);
         }
         
     }
@@ -313,12 +319,12 @@ int clearShape(uint8_t* input, int width, int height, int nbElement,int radiusOf
 int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
     
     int nbCircle=0;
-    unsigned int width_1 = width-1;
+    //unsigned int width_1 = width-1;
     int newX1,newY1,newX2,newY2;
     int pos, sub[9];
     int _isCircle;
     
-    for(int i = 200; i >=1; i--){
+    for(int i = 199; i >=1; i--){
          
         
         /*shape[i].center.y = (shape[i].max.y + shape[i].min.y) >> 1;
@@ -331,12 +337,13 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
       
         //newX1 = shape[i].center.x + RADxPI_4[shape[i].radiusX];
         //newY1 = shape[i].center.y + RADxPI_4[shape[i].radiusX];
+        _isCircle = 0; 
         if(shape[i].tooSmall == 1){
             
         }
         else{
 
-                _isCircle = 0; 
+                 
                 newX1 = shape[i].center.x + cosRADIUSxPI[shape[i].radiusX][12];
                 newY1 = shape[i].center.y + sinRADIUSxPI[shape[i].radiusX][12];
 
@@ -351,19 +358,19 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
                     
                 
 
-                        pos = (newY1+1)*(width_1)+(newX1);
+                        pos = (newY1+1)*(width)+(newX1);
 
                         sub[6] =  input[pos-1];
                         sub[7] =  input[pos];					 
                         sub[8] =  input[pos+1];				 
 
-                        pos -= (width_1);
+                        pos -= (width);
 
                         sub[3] =  input[pos-1];
                         sub[4] =  input[pos];
                         sub[5] =  input[pos+1];	
 
-                        pos -= (width_1);
+                        pos -= (width);
 
                         sub[0] =  input[pos-1];
                         sub[1] =  input[pos];					 
@@ -372,24 +379,24 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
                         if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
                             //nbCircle ++;
                             //shape[i].isCircle =1;
-                            _isCircle = 1;
+                            _isCircle += 1;
                         }
 
                         //else{
 
-                                    pos = (newY2+1)*(width_1)+(newX2);
+                                    pos = (newY2+1)*(width)+(newX2);
 
                                     sub[6] =  input[pos-1];
                                     sub[7] =  input[pos];					 
                                     sub[8] =  input[pos+1];				 
 
-                                    pos -= (width_1);
+                                    pos -= (width);
 
                                     sub[3] =  input[pos-1];
-                                    sub[4] =  input[pos+1];
+                                    sub[4] =  input[pos];
                                     sub[5] =  input[pos+1];	
 
-                                    pos -= (width_1);
+                                    pos -= (width);
 
                                     sub[0] =  input[pos-1];
                                     sub[1] =  input[pos];					 
@@ -397,18 +404,20 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
                                     if( (sub[0] || sub[1] || sub[2] || sub[3] || sub[4] || sub[5] || sub[6] ||sub[7] ||sub[8]) ){
                                         //nbCircle ++;
                                         //shape[i].isCircle =1;
-                                        _isCircle = 1;
+                                        _isCircle += 1;
                                     }
-                                    else{
-                                        _isCircle = 0;
-                                    }
+                                    
 
                         //}
-                                    if(_isCircle ==1){
+                                    if(_isCircle ==2){
                                         shape[i].isCircle = 1;
                                         nbCircle ++;
                  
                                     }
+                                    else{
+										shape[i].isCircle = 0;
+										
+									}
                                
         }
         
@@ -416,7 +425,7 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
        
     }
     log_e("nbcircle = ","%d",nbCircle);
-    
+    return nbCircle;
     
     
     
@@ -432,15 +441,15 @@ void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int 
 		
                 
                 
-                unsigned int size = (width)*(height);
-                unsigned int k=size-1;	
-		unsigned int width_2 = width-2;
+        //unsigned int size = (width)*(height);
+        //unsigned int k=size-1;	
+		unsigned int width_3 = width-3;
 		unsigned int  pos=0;
 		int temp_h=0,temp_v = 0;
 		int norm = 0;
 		
-		double tmp_mean=0;
-		uint8_t mean =0;
+		//double tmp_mean=0;
+		//uint8_t mean =0;
 		
 	
 	
@@ -449,28 +458,28 @@ void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int 
 	
 		int threshold = imageMean(input, width, height) * R;
 		
-		for(int i=height-2;i>=1;i--){
-			for(int j=width_2;j>=1;j--){	
+		for(int i=height-3;i>=1;i--){
+			for(int j=width_3;j>=1;j--){	
                                                 
-						pos = (i+1)*(width_2)+(j);
+						pos = (i+1)*(width)+(j);
                             
                                                
 						sub[6] =  input[pos-1];
 						sub[7] =  input[pos];					 
 						sub[8] =  input[pos+1];				 
 											 		
-						pos -= (width_2);
+						pos -= (width);
 						sub[3] =  input[pos-1];
 						sub[4] =  input[pos];					 
 						sub[5] =  input[pos+1];	
 						
-						pos -= (width_2);					 		
+						pos -= (width);					 		
 						sub[0] =  input[pos-1];
 						sub[1] =  input[pos];					 
 						sub[2] =  input[pos+1];				 
 											 
 					
-						pos += (width_2);
+						pos += (width);
 						 
 											 
 						
@@ -507,14 +516,16 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
                 uint8_t tmp[614400];
                 uint8_t tmp2[614400];
     
-                thresholding(input, width,height, tmp,20);
-		//borderDetector(tmp,width,height,tmp2,28);
-                dilation3x3(tmp,width,height,tmp2);
-                erosion3x3(tmp2,width,height,tmp);
-                
+                thresholding(input,width,height,tmp,25);
+				borderDetector(tmp,width,height,tmp2,28);
+                dilation3x3(tmp2,width,height,tmp);
+                erosion3x3(tmp,width,height,tmp2);
+               //displayPictureBlack(tmp2,width,height,0,0);
                
-                unsigned int element = segmentation(tmp,width,height,output);
-                log_e("shapeDetector","nb element = %d",element);
+				unsigned int element = segmentation(tmp2,width,height,output);
+				
+				log_e("shapeDetector","nb element = %d",element);
+				
                 isCircle(output,width,height,element,0);
                 
                 
@@ -529,23 +540,26 @@ void hough(uint8_t* input, int width, int height, uint8_t* output) {
                 
                 unsigned int newX,newY,pos,width_1 = width-1;
                 
-		borderDetector(input,width,height,tmp2,55);
+				borderDetector(input,width,height,tmp2,55);
+				
+               
                 dilation3x3(tmp2,width,height,tmp);
                 erosion3x3(tmp,width,height,tmp2);
                 
-                for(int R = 65; R >= 45; R-=5){ //petit cerlce 42//gros cerlce 65
-                        for(int i=height-1;i>=0;i--){
-                                for(int j=width-1;j>=0;j--){	
+                for(int R = 120; R >= 60; R-=10){ //petit cerlce 42//gros cerlce 65
+                        for(int i=height-2;i>=1;i--){
+                                for(int j=width-2;j>=1;j--){	
 
-
-                                    pos = (i)*(width_1)+(j);
+									
+                                    pos = (i)*(width)+(j);
+                                    output[pos]= 0;
                                     if(tmp2[pos] == OBJECT){
                                      
                                             for(int teta = 99; teta >=0; teta -= 5){
                                                     newX = j+ cosRADIUSxPI[R][teta];
                                                     newY = i+ sinRADIUSxPI[R][teta];
                                                     if ( newX > 2 && newX < width-3 && newY >2 && newY <height-3){
-                                                        tmp3[(newY)*(width_1)+(newX)] +=5;
+                                                        tmp3[(newY)*(width)+(newX)] +=5;
                                                     }
                                             } 
 
@@ -556,17 +570,18 @@ void hough(uint8_t* input, int width, int height, uint8_t* output) {
                         
                         
                          //recherche maxima
-                        for(int i=height-1;i>=0;i--){
-                                for(int j=width-1;j>=0;j--){
-                                                pos = (i)*(width_1)+(j);
-                                                if(tmp3[pos] > 50){  //gros cerlce 50
+                        for(int i=height-2;i>=1;i--){
+                                for(int j=width-2;j>=1;j--){
+                                                pos = (i)*(width)+(j);
+                                                if(tmp3[pos] > 40){  //gros cerlce 50
 
                                                     for(int teta2 = 99; teta2 >=0; teta2 -= 1){
                                                             newX = j+ cosRADIUSxPI[R][teta2];
                                                             newY = i+ sinRADIUSxPI[R][teta2];
                                                                         if ( newX > 2 && newX < width-3 && newY >2 && newY <height-3){
-                                                                                    output[(newY)*(width_1)+(newX)]= 255;
+                                                                                    output[(newY)*(width)+(newX)]= 255;
                                                                         }
+                                                                        
 
                                                     }
 
