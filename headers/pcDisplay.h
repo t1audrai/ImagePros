@@ -32,7 +32,7 @@ uint8_t outScreen[3000000];
 void pcDisplayPictureRGB(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
 void pcDisplayPictureBlack(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
 void pcDisplayPictureFC(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
-void pcDisplayCircle(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset);
+void pcDisplayCircle(uint8_t * inFrame,uint8_t * backFrame, int width, int height, int X_offset, int Y_offset);
 
 #endif	/* PCDISPLAY_H */
 

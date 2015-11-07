@@ -74,7 +74,7 @@ void pcDisplayPictureFC(uint8_t * inFrame,int width, int height, int X_offset, i
 }
 
 
-void pcDisplayCircle(uint8_t * inFrame,int width, int height, int X_offset, int Y_offset)
+void pcDisplayCircle(uint8_t * inFrame,uint8_t * backFrame, int width, int height, int X_offset, int Y_offset)
 {	
 	int i =0;
         int j = 0;
@@ -103,9 +103,9 @@ void pcDisplayCircle(uint8_t * inFrame,int width, int height, int X_offset, int 
                                                     }                
                                   // }
                                     else{
-                                                outScreen[j++] = R(0); //R
-						outScreen[j++] = G(0); //G
-                                                outScreen[j++] = B(0); //B
+                                                outScreen[j++] = backFrame[i]; //R
+						outScreen[j++] = backFrame[i]; //G
+                                                outScreen[j++] = backFrame[i]; //B
                                         
                                     }
                                     i++;

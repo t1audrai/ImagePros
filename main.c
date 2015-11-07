@@ -70,7 +70,7 @@ y	2	G R G R G R G R
                 
               shapeDetector(videoFrame,width,height,outVideo);
               // pcDisplayPictureFC(outVideo,width,height,0,0);
-              pcDisplayCircle(outVideo,width,height,0,0);
+              pcDisplayCircle(outVideo,videoFrame,width,height,0,0);
                 
        
     
@@ -129,8 +129,8 @@ int main(int argc, char** argv) {
               //log_i("end computing","");
               
               
-              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/coin.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/coin.jpg", CV_LOAD_IMAGE_COLOR);
+              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_COLOR);
               
               
               if (imgGray == NULL)
