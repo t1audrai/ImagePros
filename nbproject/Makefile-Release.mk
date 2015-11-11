@@ -38,10 +38,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/CVtool.o \
 	${OBJECTDIR}/decode.o \
 	${OBJECTDIR}/display.o \
+	${OBJECTDIR}/fb.o \
 	${OBJECTDIR}/init.o \
-	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/myPrint.o \
-	${OBJECTDIR}/pcDisplay.o
+	${OBJECTDIR}/myPrint.o
 
 
 # C Compiler Flags
@@ -83,25 +82,20 @@ ${OBJECTDIR}/display.o: display.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/display.o display.c
 
+${OBJECTDIR}/fb.o: fb.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/fb.o fb.c
+
 ${OBJECTDIR}/init.o: init.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/init.o init.c
 
-${OBJECTDIR}/main.o: main.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
-
 ${OBJECTDIR}/myPrint.o: myPrint.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/myPrint.o myPrint.c
-
-${OBJECTDIR}/pcDisplay.o: pcDisplay.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pcDisplay.o pcDisplay.c
 
 # Subprojects
 .build-subprojects:

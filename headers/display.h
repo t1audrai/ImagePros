@@ -25,6 +25,10 @@ struct fb_fix_screeninfo fix_info;
 /* The frame buffer memory pointer */
 uint8_t *framebuffer;
 
+
+uint8_t outScreen[3000000];
+
+
 #define RGB(r,g,b) ( \
         (((r) >> (8-var_info.red.length)) << var_info.red.offset) | \
         (((g) >> (8-var_info.green.length)) << var_info.green.offset) | \
@@ -34,9 +38,9 @@ uint8_t *framebuffer;
 #define SET_PIXEL(x,y,color) (((short*)framebuffer)[(x)+(y)*fix_info.line_length/2]=(color))
 
 
-#define Blue(pos)  ((myColor[pos] & 0xFF0000) >> 16)
+#define Red(pos)  ((myColor[pos] & 0xFF0000) >> 16)
 #define Green(pos)  ((myColor[pos] & 0x00FF00) << 8 >> 16)
-#define Red(pos)  ((myColor[pos] & 0x0000FF) << 16>> 16) 
+#define Blue(pos)  ((myColor[pos] & 0x0000FF) << 16>> 16) 
 
 
 void rect_fill(int x,int y, int w, int h, unsigned short color);

@@ -2,7 +2,6 @@
 #include "decode.h"
 #include "CVtool.h"
 #include "myPrint.h"
-#include "pcDisplay.h"
 #include "display.h"
 #include "init.h"
 
@@ -517,14 +516,14 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
                 uint8_t tmp2[614400];
     
                 thresholding(input,width,height,tmp,25);
-				borderDetector(tmp,width,height,tmp2,28);
+		borderDetector(tmp,width,height,tmp2,28);
                 dilation3x3(tmp2,width,height,tmp);
                 erosion3x3(tmp,width,height,tmp2);
                //displayPictureBlack(tmp2,width,height,0,0);
                
-				unsigned int element = segmentation(tmp2,width,height,output);
+		unsigned int element = segmentation(tmp2,width,height,output);
 				
-				log_e("shapeDetector","nb element = %d",element);
+		log_e("shapeDetector","nb element = %d",element);
 				
                 isCircle(output,width,height,element,0);
                 

@@ -38,10 +38,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/CVtool.o \
 	${OBJECTDIR}/decode.o \
 	${OBJECTDIR}/display.o \
+	${OBJECTDIR}/fb.o \
 	${OBJECTDIR}/init.o \
-	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/myPrint.o \
-	${OBJECTDIR}/pcDisplay.o
+	${OBJECTDIR}/myPrint.o
 
 
 # C Compiler Flags
@@ -71,37 +70,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/imagepros: ${OBJECTFILES}
 ${OBJECTDIR}/CVtool.o: CVtool.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CVtool.o CVtool.c
+	$(COMPILE.c) -g -DPC -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CVtool.o CVtool.c
 
 ${OBJECTDIR}/decode.o: decode.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/decode.o decode.c
+	$(COMPILE.c) -g -DPC -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/decode.o decode.c
 
 ${OBJECTDIR}/display.o: display.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/display.o display.c
+	$(COMPILE.c) -g -DPC -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/display.o display.c
+
+${OBJECTDIR}/fb.o: fb.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -DPC -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/fb.o fb.c
 
 ${OBJECTDIR}/init.o: init.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/init.o init.c
-
-${OBJECTDIR}/main.o: main.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -g -DPC -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/init.o init.c
 
 ${OBJECTDIR}/myPrint.o: myPrint.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/myPrint.o myPrint.c
-
-${OBJECTDIR}/pcDisplay.o: pcDisplay.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pcDisplay.o pcDisplay.c
+	$(COMPILE.c) -g -DPC -Iheaders -I/usr/local/include/opencv `pkg-config --cflags opencv` -std=c99  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/myPrint.o myPrint.c
 
 # Subprojects
 .build-subprojects:

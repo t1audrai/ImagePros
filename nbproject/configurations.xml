@@ -9,7 +9,6 @@
       <itemPath>headers/display.h</itemPath>
       <itemPath>headers/init.h</itemPath>
       <itemPath>headers/myPrint.h</itemPath>
-      <itemPath>headers/pcDisplay.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -21,10 +20,20 @@
       <itemPath>CVtool.c</itemPath>
       <itemPath>decode.c</itemPath>
       <itemPath>display.c</itemPath>
+      <itemPath>fb.c</itemPath>
       <itemPath>init.c</itemPath>
-      <itemPath>main.c</itemPath>
       <itemPath>myPrint.c</itemPath>
-      <itemPath>pcDisplay.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -53,6 +62,9 @@
             <pElem>headers</pElem>
             <pElem>/usr/local/include/opencv</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>PC</Elem>
+          </preprocessorList>
         </cTool>
         <linkerTool>
           <linkerDynSerch>
@@ -70,6 +82,8 @@
       </item>
       <item path="display.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="fb.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="headers/CVtool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/decode.h" ex="false" tool="3" flavor2="0">
@@ -80,15 +94,9 @@
       </item>
       <item path="headers/myPrint.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="headers/pcDisplay.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="init.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="myPrint.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="pcDisplay.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -117,6 +125,8 @@
       </item>
       <item path="display.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="fb.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="headers/CVtool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/decode.h" ex="false" tool="3" flavor2="0">
@@ -127,15 +137,9 @@
       </item>
       <item path="headers/myPrint.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="headers/pcDisplay.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="init.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="myPrint.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="pcDisplay.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

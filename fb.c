@@ -1,5 +1,8 @@
-/* File: fb.c */
+//#define PC
+//#define BEAGLE
 
+
+/* File: fb.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -7,17 +10,24 @@
 #include <string.h>
 #include <getopt.h>             /* getopt_long() */
 #include <unistd.h>
-#include <stdint.h>				// uint_8
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-#include <linux/fb.h>
-
+#include <stdint.h> 
 
 #include "myPrint.h"
 #include "display.h"
 #include "decode.h"
 #include "CVtool.h"
 #include "init.h"
+
+#ifdef PC
+#include <opencv/highgui.h> 
+#endif
+
+#ifdef BEAGLE                              // uint_8
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+#include <linux/fb.h>
+
+
 
 typedef void (*ProcessFunc)(uint8_t *, int, int);
 
@@ -33,7 +43,7 @@ struct fb_var_screeninfo var_info;
 /* The frame buffer memory pointer */
 uint8_t *framebuffer;
 
-
+#endif
 
 /////////////////////////////////
 
@@ -66,6 +76,7 @@ uint8_t f3[614400];
  *       ((green >> (8 - 6) << 6) |
  *      ((blue >> (8 - 5) << 0)
  */
+#ifdef BEAGLE  
 #define RGB(r,g,b) ( \
         (((r) >> (8-var_info.red.length)) << var_info.red.offset) | \
         (((g) >> (8-var_info.green.length)) << var_info.green.offset) | \
@@ -91,42 +102,28 @@ uint8_t f3[614400];
 #define bounds(m,M,x) ((x)>M ? M : (x)<(m) ? m : (x))
 
 
+#endif
+
 static void process_image_yuv422 (uint8_t * videoFrame, int width, int height)
 {
 	
-/*              x
-		0 1 2 3 4 5 6 7
-		
-	0	G R G R G R G R
-	1	B G B G B G B G
-y	2	G R G R G R G R
-	3	B G B G B G B G
-	4	G R G R G R G R
-	5	B G B G B G B G
-
- */
-		
-		
-		
+	
 		//DecodeYUVtoRGB(videoFrame,f,width,height);
-		DecodeYUVtoY(videoFrame,f1,width,height);
+		
+                DecodeYUVtoY(videoFrame,f1,width,height);
 		
 		//borderdetector2(f1,width,height,f2,5000);
 		//displayPictureRGB(f,width,height);
-		
-		//shapeDetector(f1,width,height,f3);
-		hough(f1,width,height,f3);
-		
-		
-		
-		
 	
-		displayCircle(f3,f1,width,height,0,0);
+                shapeDetector(f1,width,height,f3);
+		//hough(f1,width,height,f3);	
+                displayCircle(f3,f1,width,height,0,0);
 		
 		
-       //displayPictureBlack(f2,width,height,0,height);
-       //displayPictureFC(f2,width,height,0,0); 
-       //displayCircle(f1,width,height,0,height);
+                //displayPictureBlack(f1,width,height,0,0);
+                
+                //displayPictureFC(f2,width,height,0,0); 
+                //displayCircle(f1,width,height,0,height);
 		
 					
                //hough(videoFrame,width,height,f1);
@@ -142,6 +139,7 @@ static void process_image_raw12(uint8_t * videoFrame, int width, int height)
 /***************************************************************************
  * main
  ***************************************************************************/
+#ifdef BEAGLE  
 typedef enum 
 {      
 	PIX_FMT_YUV420P,
@@ -182,7 +180,7 @@ static void usage (FILE *fp, int argc, char **argv)
 				"\n",
 				argv[0]);
 }
-
+#endif  
 
 void testFunction(){
 	                                             
@@ -192,78 +190,10 @@ void testFunction(){
 		 log_d("","   |  _| -_|_ -|  _|   __| | |   |  _|  _| | . |   | \n");
 		 log_d("","   |_| |___|___|_| |__|  |___|_|_|___|_| |_|___|_|_| \n");
 		 log_d("","\n");                                                     
-
-		/*
-		log_d("testFunction","test mult");
-		log_d ("testFunction","ma");
-		unsigned int * A = (unsigned int*) malloc (2*3* sizeof(unsigned int));
-		A[0] =1;
-		A[1] =2;
-		A[2] =0;
-		A[3] =4;
-		A[4] =3;
-		A[5] =1;
-		struct matrix* MA = init_matrix(2,3,A);
-		print_matrix(MA);
-
-
-		log_d ("testFunction","mb\n");
-		unsigned int * B = (unsigned int*) malloc (3*2* sizeof(unsigned int));
-		B[0] =5;
-		B[1] =1;
-		B[2] =2;
-		B[3] =3;
-		B[4] =3;
-		B[5] =4;
-		struct matrix* MB = init_matrix(3,2,B);
-		print_matrix(MB);
-	
-	
-		log_d ("testFunction", "ans\n");
-		struct matrix* ans = mult_matrix(MA,MB);
-		print_matrix(ans);
-		log_d ("testFunction", "\n");
-		log_d ("testFunction", "ok2\n");
-		
-		*/
-		/*
-		log_d("testFunction","sous matrice\n");
-		log_d ("testFunction","ma\n");
-		int * A = (int*) malloc (2*3* sizeof(int));
-		A[0] =1;
-		A[1] =2;
-		A[2] =0;
-		A[3] =4;
-		A[4] =3;
-		A[5] =1;
-		struct matrix* MA = init_matrix(2,3,A);
-		print_matrix(MA);
-		
-		
-		log_d ("testFunction","ans\n");
-		struct matrix* ans = sub_matrix(MA,0,1,0,1);
-		print_matrix(ans);
-	
-		unsigned int add = sum_matrix(ans);
-		log_d ("testFunction","add = %d\n", add );
-		log_i ("testFunction","add = %d\n", add );
-		log_e ("testFunction","add = %d\n", add );
-		log_wtf ("testFunction","add = %d\n", add );
-		*/
-		/*
-		log_d("testFunction","Prewitt\n");
-		struct matrix* ans = createPrewitt("H");
-		print_matrix(ans);
-		
-		delete_matrix(ans);
-		log_d("testFunction","del\n");*/
-		
-		
-		
 	
 };
 
-
+#ifdef BEAGLE  
 
 int main(int argc, char *argv[])
 {
@@ -401,3 +331,91 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
+#endif  
+
+
+#ifdef PC  
+int main(int argc, char** argv) {
+            
+        int width  = WIDTH;
+	int height = HEIGHT;
+    
+
+        if(Testing){ testFunction();} 
+        else{
+            
+              IplImage* imgGray     = NULL; 
+              IplImage* imgRGB      = NULL; 
+              IplImage* imgYUV422   = NULL; 
+              
+              const char* window_title = "Hello, OpenCV!";
+              
+              //log_i("computing","");
+              init_compute();
+              //log_i("end computing","");
+              
+              
+             
+              imgRGB = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_COLOR);
+              imgGray = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+              imgYUV422 = cvLoadImage("/root/Documents/Projet Elec/ImagePros/Images/test2.jpg", CV_LOAD_IMAGE_COLOR);
+              
+              if (imgYUV422 == NULL)
+              {
+                  fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
+                  return EXIT_FAILURE;
+              }
+              cvNamedWindow (window_title, CV_WINDOW_AUTOSIZE);
+             
+             
+              height = imgYUV422->height;
+              width = imgYUV422->width;
+              
+              
+             //uint8_t * videoFrame = (uint8_t*)malloc(width*height*4*sizeof(uint8_t));
+              uint8_t * videoFrame = (uint8_t*) malloc (width*height*2);
+              
+             cvCvtColor(imgRGB, imgYUV422,CV_RGB2YCrCb);
+         
+            
+             int i =0;
+             for (int h = 0; h < height-1; h++) {
+			for (int w = 0; w < width-1; w++){
+                                   videoFrame[i++] = CV_IMAGE_ELEM(imgGray,uint8_t,h,w);
+                                   videoFrame[i++] = CV_IMAGE_ELEM(imgGray,uint8_t,h,w);
+                                 
+                                    
+                                    
+                        }
+             }
+             
+              
+             
+            
+            process_image_yuv422(videoFrame, width, height);
+             
+             
+            i = 0;
+            int j=0;
+      
+          
+            for (int h = 0; h < height-1; h++) {
+			for (int w = 0; w <( width-1)*3; w+=3){
+                            
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w)   = outScreen[j++] ;//R
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+1) = outScreen[j++]; //G
+                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+2) = outScreen[j++];//B
+                        }
+             }
+              
+              cvShowImage (window_title, imgRGB);
+              cvWaitKey(0);
+              cvDestroyAllWindows();
+              cvReleaseImage(&imgRGB);
+            }
+           
+
+    
+    
+}
+#endif 
