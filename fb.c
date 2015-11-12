@@ -208,7 +208,7 @@ int communication(char * fifo){
 	
 			read(fd, buf, MAX_BUF);
 		   	printf("Received: %s\n", buf);
-    		
+                        buf[0] = '\0';
 }
 
 
@@ -362,6 +362,9 @@ int main(int argc, char** argv) {
         char * myfifo = "/tmp/myfifo";
     	unlink(myfifo);
 	mkfifo(myfifo, 0666);
+        
+   
+
 	fd = open(myfifo, O_RDONLY);
     
 
