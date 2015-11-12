@@ -18,8 +18,13 @@
 #include "CVtool.h"
 #include "init.h"
 
+#include <sys/stat.h>
+#include <errno.h>
+
+
 #ifdef PC
 #include <opencv/highgui.h> 
+#include <sys/time.h>
 #endif
 
 #ifdef BEAGLE                              // uint_8
@@ -60,6 +65,12 @@ int Testing = NO;
 
 uint8_t f1[614400];
 uint8_t f3[614400];
+
+//fifo
+#define MAX_BUF 1024
+char buf[MAX_BUF];
+int fd;
+
 
 
 //////////////////////////////////
@@ -193,6 +204,14 @@ void testFunction(){
 	
 };
 
+int communication(char * fifo){
+	
+			read(fd, buf, MAX_BUF);
+		   	printf("Received: %s\n", buf);
+    		
+}
+
+
 #ifdef BEAGLE  
 
 int main(int argc, char *argv[])
@@ -323,7 +342,7 @@ int main(int argc, char *argv[])
 		
 		proc_func(videoFrame, width, height);
 		
-	}
+    }
 
     /* Release mmap. */
     munmap(framebuffer,0);
@@ -339,6 +358,11 @@ int main(int argc, char** argv) {
             
         int width  = WIDTH;
 	int height = HEIGHT;
+        
+        char * myfifo = "/tmp/myfifo";
+    	unlink(myfifo);
+	mkfifo(myfifo, 0666);
+	fd = open(myfifo, O_RDONLY);
     
 
         if(Testing){ testFunction();} 
@@ -389,27 +413,48 @@ int main(int argc, char** argv) {
                         }
              }
              
-              
-             
-            
-            process_image_yuv422(videoFrame, width, height);
-             
-             
-            i = 0;
-            int j=0;
-      
-          
-            for (int h = 0; h < height-1; h++) {
-			for (int w = 0; w <( width-1)*3; w+=3){
-                            
-                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w)   = outScreen[j++] ;//R
-                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+1) = outScreen[j++]; //G
-                                   CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+2) = outScreen[j++];//B
-                        }
+            int fps = 0;
+           
+            struct timeval tvBegin, tvEnd, tvDiff;
+
+
+            while(cvWaitKey(200) != 113){
+                
+                        gettimeofday(&tvBegin, NULL);
+                        
+                        communication(myfifo);
+                        process_image_yuv422(videoFrame, width, height);
+
+
+                        i = 0;
+                        int j=0;
+
+
+                        for (int h = 0; h < height-1; h++) {
+                                    for (int w = 0; w <( width-1)*3; w+=3){
+
+                                               CV_IMAGE_ELEM(imgRGB,uint8_t,h,w)   = outScreen[j++] ;//R
+                                               CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+1) = outScreen[j++]; //G
+                                               CV_IMAGE_ELEM(imgRGB,uint8_t,h,w+2) = outScreen[j++];//B
+                                    }
+                         }
+
+                        cvShowImage(window_title, imgRGB);
+                        gettimeofday(&tvEnd, NULL);
+                        
+                       
+                        long int diff = (tvEnd.tv_usec + 1000000 * tvEnd.tv_sec) - (tvBegin.tv_usec + 1000000 * tvBegin.tv_sec);
+                        tvDiff.tv_sec = diff / 1000000;
+                        tvDiff.tv_usec = diff % 1000000;
+
+   
+                        
+                        //printf("%ld.%06ld\n", tvDiff.tv_sec, tvDiff.tv_usec);
+                        
+                        printf("fps : %f\n", 1/(tvDiff.tv_sec + tvDiff.tv_usec*0.000001));
+                   
              }
-              
-              cvShowImage (window_title, imgRGB);
-              cvWaitKey(0);
+             
               cvDestroyAllWindows();
               cvReleaseImage(&imgRGB);
             }

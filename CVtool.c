@@ -423,7 +423,7 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
         
        
     }
-    log_e("nbcircle = ","%d",nbCircle);
+    log_i("nbcircle = ","%d",nbCircle);
     return nbCircle;
     
     
@@ -523,7 +523,7 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
                
 		unsigned int element = segmentation(tmp2,width,height,output);
 				
-		log_e("shapeDetector","nb element = %d",element);
+		log_i("shapeDetector","nb element = %d",element);
 				
                 isCircle(output,width,height,element,0);
                 
