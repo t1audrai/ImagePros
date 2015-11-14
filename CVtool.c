@@ -423,7 +423,7 @@ int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM){
         
        
     }
-    log_i("nbcircle = ","%d",nbCircle);
+    
     return nbCircle;
     
     
@@ -531,7 +531,7 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
            
 }
 
-void hough(uint8_t* input, int width, int height, uint8_t* output) {
+void hough(uint8_t* input, int width, int height, uint8_t* output, int thresholdBorder, int radMin, int RadMax, int step, int threshold) {
 		
                 uint8_t tmp[614400];
                 uint8_t tmp2[614400];
@@ -539,13 +539,13 @@ void hough(uint8_t* input, int width, int height, uint8_t* output) {
                 
                 unsigned int newX,newY,pos,width_1 = width-1;
                 
-				borderDetector(input,width,height,tmp2,55);
+                borderDetector(input,width,height,tmp2,thresholdBorder);
 				
                
                 dilation3x3(tmp2,width,height,tmp);
                 erosion3x3(tmp,width,height,tmp2);
                 
-                for(int R = 120; R >= 60; R-=10){ //petit cerlce 42//gros cerlce 65
+                for(int R = RadMax; R >= radMin; R-=step){ //petit cerlce 42//gros cerlce 65
                         for(int i=height-2;i>=1;i--){
                                 for(int j=width-2;j>=1;j--){	
 
@@ -572,7 +572,7 @@ void hough(uint8_t* input, int width, int height, uint8_t* output) {
                         for(int i=height-2;i>=1;i--){
                                 for(int j=width-2;j>=1;j--){
                                                 pos = (i)*(width)+(j);
-                                                if(tmp3[pos] > 40){  //gros cerlce 50
+                                                if(tmp3[pos] > threshold){  //gros cerlce 50
 
                                                     for(int teta2 = 99; teta2 >=0; teta2 -= 1){
                                                             newX = j+ cosRADIUSxPI[R][teta2];

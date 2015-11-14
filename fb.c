@@ -22,6 +22,12 @@
 #include <errno.h>
 
 
+typedef void (*ProcessFunc)(uint8_t *, int, int);
+
+typedef void (*CVprocessFunc)(uint8_t *, int, int, int, int, int, int, int);
+CVprocessFunc cVprocessFunc;
+int cVprocessArg[8];
+
 #ifdef PC
 #include <opencv/highgui.h> 
 #include <sys/time.h>
@@ -32,9 +38,6 @@
 #include <sys/ioctl.h>
 #include <linux/fb.h>
 
-
-
-typedef void (*ProcessFunc)(uint8_t *, int, int);
 
 /* Device Name like /dev/fb */
 #define FBNAME	"/dev/fb0"
@@ -64,8 +67,9 @@ int Testing = NO;
 #define SIZE 640*480*2;
 
 uint8_t f1[614400];
+uint8_t f2[614400];
 uint8_t f3[614400];
-
+uint8_t blackPicture[614400];
 //fifo
 #define MAX_BUF 1024
 char buf[MAX_BUF];
@@ -115,31 +119,112 @@ int fd;
 
 #endif
 
+
+
+
+static void process_image_hough(uint8_t * videoFrame, int width, int height, int thresholdBorder, int radMin, int RadMax, int step, int threshold){
+    
+        hough(videoFrame,width,height,f1,thresholdBorder,radMin,RadMax, step, threshold);
+        displayCircle(f1,videoFrame,width,height,0,0);
+     
+}
+
+static void process_image_shape(uint8_t * videoFrame, int width, int height, int thresholdSeg, int thresholdBorder, int step, int a, int b)
+{
+               unsigned int element = 0;
+               unsigned int nbCircle =0;
+               
+		switch (step) {
+			case 0: //image noir et blanc
+                                log_e("image noir et blanc","");
+                                displayPictureBlack(videoFrame,width,height,0,0);
+				break;
+
+                        case 1: //threshold
+                                log_e("threshold","");
+                                thresholding(videoFrame,width,height,f2,thresholdSeg);
+                                displayPictureBlack(f2,width,height,0,0);
+				break;
+                                
+                        case 2: //contour
+                                log_e("contour","");
+                                thresholding(videoFrame,width,height,f2,thresholdSeg);
+                                borderDetector(f2,width,height,f3,thresholdBorder);
+                                displayPictureBlack(f3,width,height,0,0);
+				break;
+                                
+                        case 3: //dilatation
+                                log_e("dilatation","");
+                                thresholding(videoFrame,width,height,f2,thresholdSeg);
+                                borderDetector(f2,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                displayPictureBlack(f1,width,height,0,0);
+				break;
+                                
+                        case 4: //erosion
+                                log_e("erosion","");
+                                thresholding(videoFrame,width,height,f2,thresholdSeg);
+                                borderDetector(f2,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                erosion3x3(f1,width,height,f2);
+                                displayPictureBlack(f2,width,height,0,0);
+				break;
+                                
+                        case 5: //segmentation
+                                log_e("segmentation","");
+                                thresholding(videoFrame,width,height,f2,thresholdSeg);
+                                borderDetector(f2,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                erosion3x3(f1,width,height,f2);
+                                element = segmentation(f2,width,height,f3);
+                                log_i("shapeDetector","nb element = %d",element);
+                                displayPictureFC(f3,width,height,0,0);
+				break;
+                                
+                        case 6: //detection de cercle
+                                log_e("detection de cercle","");
+                                thresholding(videoFrame,width,height,f2,thresholdSeg);
+                                borderDetector(f2,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                erosion3x3(f1,width,height,f2);
+                                element = segmentation(f2,width,height,f3);
+                                log_i("shapeDetector","nb element = %d",element);
+                                nbCircle = isCircle(f3,width,height,element,0);
+                                log_i("nbcircle = ","%d",nbCircle);
+                                displayCircle(f3,f3,width,height,0,0);
+				break;
+                                
+                                
+                        case 7: //detection de cerlce avec le fond
+                                log_e("detection de cerlce avec le fond","");
+                                thresholding(videoFrame,width,height,f2,thresholdSeg);
+                                borderDetector(f2,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f2);
+                                erosion3x3(f2,width,height,f3);
+                                element = segmentation(f3,width,height,f2);
+                                log_i("shapeDetector","nb element = %d",element);
+                                nbCircle = isCircle(f2,width,height,element,0);
+                                log_i("nbcircle = ","%d",nbCircle);
+                                displayCircle(f2,videoFrame,width,height,0,0);
+				break;
+			
+                        default:
+                                log_e("erreur param step","");
+                                break; 
+                            
+                                
+            
+                }
+             
+}    
+                
+
+
+
 static void process_image_yuv422 (uint8_t * videoFrame, int width, int height)
 {
-	
-	
-		//DecodeYUVtoRGB(videoFrame,f,width,height);
-		
-                DecodeYUVtoY(videoFrame,f1,width,height);
-		
-		//borderdetector2(f1,width,height,f2,5000);
-		//displayPictureRGB(f,width,height);
-	
-                shapeDetector(f1,width,height,f3);
-		//hough(f1,width,height,f3);	
-                displayCircle(f3,f1,width,height,0,0);
-		
-		
-                //displayPictureBlack(f1,width,height,0,0);
-                
-                //displayPictureFC(f2,width,height,0,0); 
-                //displayCircle(f1,width,height,0,height);
-		
-					
-               //hough(videoFrame,width,height,f1);
-               //displayPictureBlack(f1,width,height,0,0);*/
-
+		DecodeYUVtoY(videoFrame,blackPicture,width,height);
+         
 }
 
 
@@ -207,8 +292,65 @@ void testFunction(){
 int communication(char * fifo){
 	
 			read(fd, buf, MAX_BUF);
-		   	printf("Received: %s\n", buf);
-                        buf[0] = '\0';
+		   	
+                        if( buf[0] != '\0'){ //on a recu un nouvelle trame
+                                    printf("Received: %s\n", buf);
+                                    char tmp[512];
+                                    int funct;
+                                    //reading buffer;
+                                    int i = 0, j=0,k=0;
+                                    while(buf[i] != '\0'){
+                                        j=0;
+                                        while(buf[i] != ' '){
+                                              tmp[j++] = buf[i++];
+                                              
+                                        }
+                                        tmp[j] = '\0';
+                                        i++;
+                                        
+                                        if(k==0){//la fonction
+                                          sscanf(tmp,"%d",&funct);
+                                        }
+                                        else{                                       
+
+                                          sscanf(tmp,"%d",&cVprocessArg[k]);
+                                        }
+                                        k++;
+                                        
+                                    }
+                                   printf("funct: %d\n", funct);   
+                                   printf("param[1]: %d\n", cVprocessArg[1]);
+                                   printf("param[2]: %d\n", cVprocessArg[2]);
+                                   printf("param[3]: %d\n", cVprocessArg[3]);
+                                   printf("param[4]: %d\n", cVprocessArg[4]);
+                                   printf("param[4]: %d\n", cVprocessArg[5]);
+                       
+                                   buf[0] = '\0';
+                                   
+                                  
+                                 
+                               
+                                switch(funct) {
+                                        case 1:
+                                            printf("SHAPE %s\n");   
+                                            cVprocessFunc=process_image_shape;
+                                            break;
+                                        case 2:
+                                            printf("HOUGH %s\n"); 
+                                            cVprocessFunc=process_image_hough;
+                                            break;
+                                        default:
+                                            fprintf(stderr, "\n\nError: Function inconnue\n\n");
+                                            exit (EXIT_FAILURE);
+				}
+			
+                                   
+                                   
+                        }
+                        
+                        
+                        
+                        //process_image_shape(uint8_t * videoFrame, int width, int height, int step, int thresholdSeg, int thresholdBorder)
 }
 
 
@@ -425,8 +567,12 @@ int main(int argc, char** argv) {
                 
                         gettimeofday(&tvBegin, NULL);
                         
+                        
+                        ProcessFunc proc_func=process_image_yuv422;
+                        proc_func=process_image_yuv422;
+                        proc_func(videoFrame, width, height);
                         communication(myfifo);
-                        process_image_yuv422(videoFrame, width, height);
+                        cVprocessFunc(blackPicture, width, height,cVprocessArg[1],cVprocessArg[2],cVprocessArg[3],cVprocessArg[4],cVprocessArg[5]);
 
 
                         i = 0;
