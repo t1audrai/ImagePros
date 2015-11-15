@@ -517,7 +517,10 @@ int main(int argc, char *argv[])
 	}
 	
 	
-
+    char * myfifo = "/tmp/myfifo";
+    unlink(myfifo);
+    mkfifo(myfifo, 0666);
+    
     while (!quit && !Testing)
     {
 		
@@ -532,6 +535,9 @@ int main(int argc, char *argv[])
 		
 		
 		proc_func(videoFrame, width, height);
+                communication(myfifo);
+                cVprocessFunc(blackPicture, width, height,cVprocessArg[1],cVprocessArg[2],cVprocessArg[3],cVprocessArg[4],cVprocessArg[5],cVprocessArg[6]);
+
 		
     }
 
