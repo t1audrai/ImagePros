@@ -42,7 +42,7 @@ void thresholding(uint8_t* input, int width, int height, uint8_t* output, int ba
 void dilation3x3(uint8_t* input, int width, int height, uint8_t* output);
 void erosion3x3(uint8_t* input, int width, int height, uint8_t* output);
 unsigned int segmentation(uint8_t* input, int width, int height, uint8_t* output);
-void hough(uint8_t* input, int width, int height, uint8_t* output, int thresholdBorder, int radMin, int RadMax, int step, int threshold);
+void hough(uint8_t* input, int width, int height, uint8_t* output, int radMin, int RadMax, int step, int threshold);
 int clearShape(uint8_t* input, int width, int height, int nbElement,int radiusOfShape);
 int isCircle(uint8_t* input, int width, int height, int nbElement, int PARAM);
 

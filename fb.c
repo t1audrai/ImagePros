@@ -24,7 +24,7 @@
 
 typedef void (*ProcessFunc)(uint8_t *, int, int);
 
-typedef void (*CVprocessFunc)(uint8_t *, int, int, int, int, int, int, int);
+typedef void (*CVprocessFunc)(uint8_t *, int, int, int, int, int, int, int, int);
 CVprocessFunc cVprocessFunc;
 int cVprocessArg[8];
 
@@ -122,14 +122,61 @@ int fd;
 
 
 
-static void process_image_hough(uint8_t * videoFrame, int width, int height, int thresholdBorder, int radMin, int RadMax, int step, int threshold){
+static void process_image_hough(uint8_t * videoFrame, int width, int height, int thresholdBorder, int radMin, int RadMax, int radStep, int threshold, int step){
     
-        hough(videoFrame,width,height,f1,thresholdBorder,radMin,RadMax, step, threshold);
-        displayCircle(f1,videoFrame,width,height,0,0);
+    
+            switch (step) {
+			case 0: //image noir et blanc
+                                log_e("image noir et blanc","");
+                                displayPictureBlack(videoFrame,width,height,0,0);
+				break;
+                        case 1: //contour
+                                log_e("contour","");
+                                borderDetector(videoFrame,width,height,f2,thresholdBorder); 
+                                displayPictureBlack(f2,width,height,0,0);
+                                break;
+                        case 2: //dilatation
+                                log_e("dilatation","");
+                                borderDetector(videoFrame,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                displayPictureBlack(f1,width,height,0,0);
+				break;
+                                
+                        case 3: //erosion
+                                log_e("erosion","");
+                                borderDetector(videoFrame,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                erosion3x3(f1,width,height,f2);
+                                displayPictureBlack(f2,width,height,0,0);
+				break;
+                                
+                        case 4: //hough
+                                log_e("hough","");
+                                borderDetector(videoFrame,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                erosion3x3(f1,width,height,f2);
+                                hough(f2,width,height,f3,radMin,RadMax, radStep, threshold);  
+                                displayCircle(f3,f3,width,height,0,0);
+				break;
+                        case 5: //hough
+                                log_e("hough + font","");
+                                borderDetector(videoFrame,width,height,f3,thresholdBorder);
+                                dilation3x3(f3,width,height,f1);
+                                erosion3x3(f1,width,height,f2);
+                                hough(f2,width,height,f3,radMin,RadMax, radStep, threshold);  
+                                displayCircle(f3,videoFrame,width,height,0,0);
+				break;
+                        default:
+                                log_e("erreur param step","");
+                                break; 
+            }
+            
+                                
+
      
 }
 
-static void process_image_shape(uint8_t * videoFrame, int width, int height, int thresholdSeg, int thresholdBorder, int step, int a, int b)
+static void process_image_shape(uint8_t * videoFrame, int width, int height, int thresholdSeg, int thresholdBorder, int step, int a, int b, int c)
 {
                unsigned int element = 0;
                unsigned int nbCircle =0;
@@ -323,14 +370,16 @@ int communication(char * fifo){
                                    printf("param[2]: %d\n", cVprocessArg[2]);
                                    printf("param[3]: %d\n", cVprocessArg[3]);
                                    printf("param[4]: %d\n", cVprocessArg[4]);
-                                   printf("param[4]: %d\n", cVprocessArg[5]);
-                       
+                                   printf("param[5]: %d\n", cVprocessArg[5]);
+                                   printf("param[6]: %d\n", cVprocessArg[6]);
                                    buf[0] = '\0';
                                    
                                   
                                  
                                
                                 switch(funct) {
+                                        case 0:
+                                            exit(0);
                                         case 1:
                                             printf("SHAPE %s\n");   
                                             cVprocessFunc=process_image_shape;
@@ -572,7 +621,7 @@ int main(int argc, char** argv) {
                         proc_func=process_image_yuv422;
                         proc_func(videoFrame, width, height);
                         communication(myfifo);
-                        cVprocessFunc(blackPicture, width, height,cVprocessArg[1],cVprocessArg[2],cVprocessArg[3],cVprocessArg[4],cVprocessArg[5]);
+                        cVprocessFunc(blackPicture, width, height,cVprocessArg[1],cVprocessArg[2],cVprocessArg[3],cVprocessArg[4],cVprocessArg[5],cVprocessArg[6]);
 
 
                         i = 0;

@@ -457,8 +457,8 @@ void borderDetector(uint8_t* input, int width, int height, uint8_t* output, int 
 	
 		int threshold = imageMean(input, width, height) * R;
 		
-		for(int i=height-3;i>=1;i--){
-			for(int j=width_3;j>=1;j--){	
+		for(int i=height-3;i>=2;i--){
+			for(int j=width_3;j>=2;j--){	
                                                 
 						pos = (i+1)*(width)+(j);
                             
@@ -531,19 +531,19 @@ void shapeDetector(uint8_t* input, int width, int height, uint8_t* output) {
            
 }
 
-void hough(uint8_t* input, int width, int height, uint8_t* output, int thresholdBorder, int radMin, int RadMax, int step, int threshold) {
+void hough(uint8_t* input, int width, int height, uint8_t* output, int radMin, int RadMax, int step, int threshold) {
 		
-                uint8_t tmp[614400];
-                uint8_t tmp2[614400];
+                //uint8_t tmp[614400];
+                //uint8_t tmp2[614400];
                 uint8_t tmp3[614400];
                 
                 unsigned int newX,newY,pos,width_1 = width-1;
                 
-                borderDetector(input,width,height,tmp2,thresholdBorder);
+                //borderDetector(input,width,height,tmp2,thresholdBorder);
 				
                
-                dilation3x3(tmp2,width,height,tmp);
-                erosion3x3(tmp,width,height,tmp2);
+               // dilation3x3(tmp2,width,height,tmp);
+               // erosion3x3(tmp,width,height,tmp2);
                 
                 for(int R = RadMax; R >= radMin; R-=step){ //petit cerlce 42//gros cerlce 65
                         for(int i=height-2;i>=1;i--){
@@ -552,7 +552,7 @@ void hough(uint8_t* input, int width, int height, uint8_t* output, int threshold
 									
                                     pos = (i)*(width)+(j);
                                     output[pos]= 0;
-                                    if(tmp2[pos] == OBJECT){
+                                    if(input[pos] == OBJECT){
                                      
                                             for(int teta = 99; teta >=0; teta -= 5){
                                                     newX = j+ cosRADIUSxPI[R][teta];
